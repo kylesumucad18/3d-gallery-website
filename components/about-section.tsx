@@ -31,9 +31,9 @@ export function AboutSection() {
           transition={{ duration: 0.8 }}
           className="mb-16 text-center"
         >
-          <p className="text-primary text-sm font-semibold uppercase tracking-widest mb-4">About the Work</p>
+          <p className="text-primary text-sm font-semibold uppercase tracking-widest mb-4">About You</p>
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6 leading-tight text-balance">
-            A Journey Through Light and Moments
+            My Perspective of You
           </h2>
           <div className="w-16 h-1 bg-gradient-to-r from-transparent via-primary to-transparent mx-auto" />
         </motion.div>
