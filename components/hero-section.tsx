@@ -38,23 +38,27 @@ export function HeroSection() {
         animate="visible"
         className="relative z-10 max-w-4xl px-6 text-center"
       >
-        <motion.div variants={itemVariants} className="mb-6">
-          <p className="text-primary text-sm font-semibold uppercase tracking-widest mb-2">Celebrate the Moments</p>
-          <div className="w-12 h-1 bg-gradient-to-r from-transparent via-primary to-transparent mx-auto" />
+        <motion.div variants={itemVariants} className="mb-8">
+          <div className="inline-block">
+            <p className="text-primary text-lg font-bold uppercase tracking-widest mb-2">🎉 Special Day 🎉</p>
+            <div className="w-full h-1 bg-gradient-to-r from-primary via-primary to-primary/50" />
+          </div>
         </motion.div>
 
         <motion.h1
           variants={itemVariants}
-          className="text-6xl md:text-7xl lg:text-8xl font-bold text-foreground mb-6 leading-tight text-balance"
+          className="text-5xl md:text-7xl lg:text-8xl font-bold text-foreground mb-4 leading-tight text-balance"
         >
-          Rica Marie Huyo-a Caayon
+          Happy Birthday,{' '}
+          <span className="text-primary">Rica Marie</span>
         </motion.h1>
 
         <motion.p
           variants={itemVariants}
-          className="text-xl md:text-2xl text-muted-foreground mb-12 max-w-2xl mx-auto leading-relaxed text-balance"
+          className="text-lg md:text-2xl text-muted-foreground mb-8 max-w-3xl mx-auto leading-relaxed text-balance"
         >
-          A celebration of stunning photography capturing life&apos;s most beautiful moments through an artistic lens
+          Today we celebrate you—your compassion, creativity, and the beautiful moments you&apos;ve shared with everyone. 
+          Explore this gallery to revisit our journey together and discover what makes you so special.
         </motion.p>
 
         <motion.div variants={itemVariants} className="flex gap-4 justify-center">

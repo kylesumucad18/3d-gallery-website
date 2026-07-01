@@ -4,14 +4,23 @@ import { Mail, Heart, Share2 } from 'lucide-react'
 
 export function Footer() {
   return (
-    <footer className="bg-card border-t border-border">
+    <footer className="bg-gradient-to-b from-card to-background border-t border-border">
       <div className="max-w-6xl mx-auto px-6 py-16">
+        {/* Birthday Message */}
+        <div className="text-center mb-12 pb-8 border-b border-border/50">
+          <p className="text-primary font-semibold uppercase tracking-widest text-sm mb-2">Special Day</p>
+          <h3 className="text-3xl font-bold text-foreground mb-2">Celebrating You</h3>
+          <p className="text-muted-foreground max-w-2xl mx-auto">
+            Thank you for bringing so much joy, creativity, and light into the world. Happy Birthday, Rica! 🎉
+          </p>
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
           {/* Brand */}
           <div className="col-span-1 md:col-span-1">
             <h3 className="text-2xl font-bold text-foreground mb-4">Rica Marie</h3>
             <p className="text-muted-foreground text-sm leading-relaxed">
-              Professional photographer capturing moments that matter through artistic vision and technical excellence.
+              Professional photographer capturing moments that matter. Here&apos;s to celebrating you on your special day!
             </p>
           </div>
 
