@@ -1,42 +1,72 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
+import { VerificationModal } from './verification-modal'
 
 const portfolioItems = [
   {
     id: 1,
-    title: 'Portraits & Headshots',
-    description: 'Professional portraits capturing personality and essence',
+    title: 'January',
+    description: 'Memories from the start',
     image: '/portfolio-1.png',
     color: 'from-amber-600 to-orange-600',
   },
   {
     id: 2,
-    title: 'Wedding & Events',
-    description: 'Magical moments preserved forever',
+    title: 'February',
+    description: 'Love in every frame',
     image: '/portfolio-2.png',
     color: 'from-rose-600 to-pink-600',
   },
   {
     id: 3,
-    title: 'Product Photography',
-    description: 'Details that tell a story',
+    title: 'March',
+    description: 'New beginnings captured',
     image: '/portfolio-3.png',
     color: 'from-cyan-600 to-blue-600',
   },
   {
     id: 4,
-    title: 'Landscapes & Nature',
-    description: 'Nature&apos;s grandeur captured in time',
+    title: 'April',
+    description: 'Spring moments',
     image: '/portfolio-4.png',
     color: 'from-emerald-600 to-green-600',
+  },
+  {
+    id: 5,
+    title: 'May',
+    description: 'Growth and beauty',
+    image: '/portfolio-1.png',
+    color: 'from-purple-600 to-pink-600',
+  },
+  {
+    id: 6,
+    title: 'June',
+    description: 'Perfect summer days',
+    image: '/portfolio-2.png',
+    color: 'from-yellow-600 to-amber-600',
   },
 ]
 
 export function PortfolioSection() {
   const [hoveredId, setHoveredId] = useState<number | null>(null)
+  const [isVerified, setIsVerified] = useState(false)
+  const [showModal, setShowModal] = useState(false)
+
+  useEffect(() => {
+    const verified = localStorage.getItem('verified_portfolio') === 'true'
+    setIsVerified(verified)
+    if (!verified) {
+      setShowModal(true)
+    }
+  }, [])
+
+  const handleVerificationSuccess = () => {
+    setIsVerified(true)
+    setShowModal(false)
+  }
 
   return (
     <section className="relative py-24 px-6 bg-background overflow-hidden">
@@ -47,24 +77,39 @@ export function PortfolioSection() {
           transition={{ duration: 0.8 }}
           className="mb-16 text-center"
         >
-          <p className="text-primary text-sm font-semibold uppercase tracking-widest mb-4">Portfolio</p>
+          <p className="text-primary text-sm font-semibold uppercase tracking-widest mb-4">History</p>
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6 leading-tight text-balance">
-            Diverse Collection
+            Memory Timeline with Kyle
           </h2>
           <div className="w-16 h-1 bg-gradient-to-r from-transparent via-primary to-transparent mx-auto" />
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {portfolioItems.map((item, index) => (
-            <motion.div
-              key={item.id}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-              onMouseEnter={() => setHoveredId(item.id)}
-              onMouseLeave={() => setHoveredId(null)}
-              className="group cursor-pointer relative overflow-hidden rounded-xl h-64 md:h-80"
+        {!isVerified ? (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-center py-16"
+          >
+            <p className="text-muted-foreground mb-4">Answer the verification question to view this section</p>
+            <button
+              onClick={() => setShowModal(true)}
+              className="px-6 py-3 bg-primary text-primary-foreground font-semibold rounded-lg hover:bg-primary/90 transition-colors"
             >
+              Verify to Continue
+            </button>
+          </motion.div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {portfolioItems.map((item, index) => (
+              <motion.div
+                key={item.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+                onMouseEnter={() => setHoveredId(item.id)}
+                onMouseLeave={() => setHoveredId(null)}
+                className="group cursor-pointer relative overflow-hidden rounded-xl h-64 md:h-72"
+              >
               {/* Image Background */}
               <div className="absolute inset-0 overflow-hidden">
                 <Image
@@ -98,8 +143,18 @@ export function PortfolioSection() {
                 </p>
               </div>
             </motion.div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
+
+        <VerificationModal
+          isOpen={showModal}
+          question="How many vowels are there in my name?"
+          correctAnswers={['9', 'nine']}
+          sectionId="portfolio"
+          onSuccess={handleVerificationSuccess}
+          onClose={() => setShowModal(false)}
+        />
       </div>
     </section>
   )
