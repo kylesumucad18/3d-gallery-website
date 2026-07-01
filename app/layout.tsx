@@ -3,7 +3,7 @@ import type { Metadata, Viewport } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import './globals.css'
 import { ThemeProvider } from '@/context/theme-context'
-import { ThemeSwitcher } from '@/components/theme-switcher'
+import { SiteHeader } from '@/components/site-header'
 
 const geistSans = Geist({ variable: '--font-geist-sans', subsets: ['latin'] })
 const geistMono = Geist_Mono({
@@ -48,9 +48,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable} dark bg-background`} data-theme="minimalistic">
-      <body className="font-sans antialiased bg-background">
+      <body className="font-sans antialiased bg-background relative pt-20">
         <ThemeProvider>
-          <ThemeSwitcher />
+          <SiteHeader />
           {children}
           {process.env.NODE_ENV === 'production' && <Analytics />}
         </ThemeProvider>

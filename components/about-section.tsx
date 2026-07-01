@@ -56,7 +56,7 @@ export function AboutSection() {
   ]
 
   return (
-    <section className="relative py-24 px-6 bg-gradient-to-b from-background to-card overflow-hidden">
+    <section id="about" className="relative py-24 px-6 bg-gradient-to-b from-background to-card overflow-hidden">
       <div className="max-w-6xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

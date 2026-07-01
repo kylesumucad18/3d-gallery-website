@@ -9,37 +9,43 @@ export function PhotoboothSection() {
     {
       id: 'M',
       name: 'Layout M',
-      description: 'Three pictures, three poses',
+      description: 'Size: 6x2 (Strip) 3 Pose',
       icon: '3x1',
     },
     {
       id: 'A',
       name: 'Layout A',
-      description: 'Two pictures, two poses',
-      icon: '2x1',
+      description: 'Size: 6x2 (Strip) 3 Pose',
+      icon: '3x1',
     },
     {
       id: 'R',
       name: 'Layout R',
-      description: 'Four pictures, four poses',
-      icon: '2x2',
+      description: 'Size: 6x2 (Strip) 4 Pose',
+      icon: '4x1',
     },
     {
       id: 'I',
       name: 'Layout I',
-      description: 'One picture, different filters, four results',
-      icon: '1x4',
+      description: 'Size: 6x2 (Strip) 4 Pose',
+      icon: '4x1',
     },
     {
       id: 'E',
       name: 'Layout E',
-      description: 'Six pictures, six poses',
-      icon: '3x2',
+      description: 'Size: 6x4 (4R) 4 Pose',
+      icon: '4R',
+    },
+    {
+      id: 'H',
+      name: 'Layout H',
+      description: 'Size: 6x4 (4R) 4 Pose (Grid)',
+      icon: '2x2',
     },
   ]
 
   return (
-    <section className="relative py-20 md:py-32 overflow-hidden">
+    <section id="photobooth" className="relative py-20 md:py-32 overflow-hidden">
       <div className="max-w-7xl mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -56,7 +62,7 @@ export function PhotoboothSection() {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {layouts.map((layout, index) => (
             <motion.div
               key={layout.id}
@@ -66,22 +72,22 @@ export function PhotoboothSection() {
               className="group"
             >
               <Link href={`/photobooth?layout=${layout.id}`}>
-                <div className="relative h-64 rounded-xl overflow-hidden border border-border hover:border-primary/50 transition-all duration-300 cursor-pointer bg-gradient-to-br from-primary/20 to-accent/20 hover:shadow-lg hover:shadow-primary/20">
-                  <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
-                    <div className="mb-4 p-4 bg-primary/20 rounded-lg group-hover:bg-primary/30 transition-colors">
-                      <Camera className="text-primary" size={32} />
+                <div className="relative h-72 rounded-3xl overflow-hidden border border-border/50 hover:border-primary/50 transition-all duration-500 cursor-pointer bg-white/5 backdrop-blur-xl shadow-lg hover:shadow-[0_8px_30px_rgb(var(--primary)_/_0.2)] hover:-translate-y-1">
+                  <div className="absolute inset-0 flex flex-col items-center justify-center p-8 text-center z-10">
+                    <div className="mb-5 p-5 bg-primary/10 rounded-2xl group-hover:bg-primary/20 transition-all duration-300 transform group-hover:scale-110">
+                      <Camera className="text-primary" size={36} />
                     </div>
-                    <h3 className="text-xl font-bold text-foreground mb-2">{layout.name}</h3>
-                    <p className="text-sm text-muted-foreground mb-4 line-clamp-2">{layout.description}</p>
-                    <div className="text-xs font-semibold text-primary uppercase tracking-wider mb-4">
+                    <h3 className="text-2xl font-black text-foreground mb-2 tracking-tight">{layout.name}</h3>
+                    <p className="text-sm text-muted-foreground font-medium mb-5">{layout.description}</p>
+                    <div className="text-xs font-bold text-primary bg-primary/10 px-4 py-1.5 rounded-full uppercase tracking-wider mb-4">
                       {layout.icon}
                     </div>
-                    <div className="flex items-center gap-2 text-primary font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
-                      Start <ArrowRight size={16} />
+                    <div className="flex items-center gap-2 text-primary font-bold opacity-0 group-hover:opacity-100 transition-opacity translate-y-2 group-hover:translate-y-0 duration-300">
+                      Start <ArrowRight size={18} />
                     </div>
                   </div>
 
-                  <div className="absolute inset-0 bg-gradient-to-t from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 </div>
               </Link>
             </motion.div>

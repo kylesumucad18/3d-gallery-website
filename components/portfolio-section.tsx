@@ -69,7 +69,7 @@ export function PortfolioSection() {
   }
 
   return (
-    <section className="relative py-24 px-6 bg-background overflow-hidden">
+    <section id="history" className="relative py-24 px-6 bg-background overflow-hidden">
       <div className="max-w-6xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -81,6 +81,9 @@ export function PortfolioSection() {
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6 leading-tight text-balance">
             Memory Timeline with Kyle
           </h2>
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-6 leading-relaxed">
+            A beautiful journey through our shared moments. Each month brings a new story, a new smile, and memories we'll cherish forever.
+          </p>
           <div className="w-16 h-1 bg-gradient-to-r from-transparent via-primary to-transparent mx-auto" />
         </motion.div>
 

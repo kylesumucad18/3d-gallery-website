@@ -4,6 +4,7 @@ import { PortfolioSection } from '@/components/portfolio-section'
 import { BirthdaySection } from '@/components/birthday-section'
 import { FavoritesSection } from '@/components/favorites-section'
 import { PhotoboothSection } from '@/components/photobooth-section'
+import { LetterSection } from '@/components/letter-section'
 import { Footer } from '@/components/footer'
 
 export const dynamic = 'force-dynamic'
@@ -17,6 +18,7 @@ export default function Home() {
       <BirthdaySection />
       <FavoritesSection />
       <PhotoboothSection />
+      <LetterSection />
       <Footer />
     </main>
   )

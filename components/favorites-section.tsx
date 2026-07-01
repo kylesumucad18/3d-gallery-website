@@ -60,19 +60,19 @@ export function FavoritesSection() {
   }
 
   return (
-    <section className="relative py-20 md:py-32 overflow-hidden">
+    <section id="favorites" className="relative py-20 md:py-32 overflow-hidden">
       <div className="max-w-7xl mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="mb-16"
+          className="mb-16 text-center flex flex-col items-center"
         >
           <p className="text-primary text-sm font-semibold uppercase tracking-widest mb-4">Favorites</p>
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6 leading-tight text-balance">
             Moments with the Birthday Girl
           </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl leading-relaxed">
+          <p className="text-lg text-muted-foreground max-w-2xl text-center leading-relaxed">
             A curated collection of our favorite moments together. Click to explore each memory.
           </p>
         </motion.div>

@@ -6,7 +6,7 @@ import { PhotoboothLayout } from '@/components/photobooth-layout'
 
 function PhotoboothInner() {
   const searchParams = useSearchParams()
-  const layout = (searchParams.get('layout') || 'M') as 'M' | 'A' | 'R' | 'I' | 'E'
+  const layout = (searchParams.get('layout') || 'M') as 'M' | 'A' | 'R' | 'I' | 'E' | 'H'
   const theme = (searchParams.get('theme') || 'minimalistic') as 'minimalistic' | 'coquette'
 
   return (

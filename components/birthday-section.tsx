@@ -71,7 +71,7 @@ export function BirthdaySection() {
   }
 
   return (
-    <section className="relative py-32 px-6 bg-gradient-to-b from-card to-background overflow-hidden">
+    <section id="birthday" className="relative py-32 px-6 bg-gradient-to-b from-card to-background overflow-hidden">
       {/* Background Effects */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-0 left-1/4 w-72 h-72 bg-primary/10 rounded-full blur-3xl" />

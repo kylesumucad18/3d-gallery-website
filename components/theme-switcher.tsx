@@ -16,36 +16,45 @@ function ThemeSwitcherInner() {
   if (!mounted) return null
 
   return (
-    <div className="fixed top-6 right-6 z-50">
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="flex items-center gap-2 p-2 bg-background/80 backdrop-blur-md border border-border rounded-full"
+    <motion.div
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="flex items-center gap-2 p-1 bg-background/50 backdrop-blur-md border border-border rounded-full"
+    >
+      <button
+        onClick={() => setTheme('minimalistic')}
+        className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-all ${
+          theme === 'minimalistic'
+            ? 'bg-yellow-600 text-white shadow-md'
+            : 'text-muted-foreground hover:text-foreground'
+        }`}
+        title="Minimalistic Default Theme"
       >
-        <button
-          onClick={() => setTheme('minimalistic')}
-          className={`px-4 py-2 rounded-full font-semibold transition-all ${
-            theme === 'minimalistic'
-              ? 'bg-blue-500 text-white shadow-lg'
-              : 'text-muted-foreground hover:text-foreground'
-          }`}
-          title="Professional Blue Theme"
-        >
-          Minimalistic
-        </button>
-        <button
-          onClick={() => setTheme('coquette')}
-          className={`px-4 py-2 rounded-full font-semibold transition-all ${
-            theme === 'coquette'
-              ? 'bg-pink-500 text-white shadow-lg'
-              : 'text-muted-foreground hover:text-foreground'
-          }`}
-          title="Pink Coquette Theme"
-        >
-          Coquette
-        </button>
-      </motion.div>
-    </div>
+        Minimalistic
+      </button>
+      <button
+        onClick={() => setTheme('medtech')}
+        className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-all ${
+          theme === 'medtech'
+            ? 'bg-blue-500 text-white shadow-md'
+            : 'text-muted-foreground hover:text-foreground'
+        }`}
+        title="Professional Blue Theme"
+      >
+        MedTech
+      </button>
+      <button
+        onClick={() => setTheme('coquette')}
+        className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-all ${
+          theme === 'coquette'
+            ? 'bg-pink-500 text-white shadow-md'
+            : 'text-muted-foreground hover:text-foreground'
+        }`}
+        title="Pink Coquette Theme"
+      >
+        Coquette
+      </button>
+    </motion.div>
   )
 }
 

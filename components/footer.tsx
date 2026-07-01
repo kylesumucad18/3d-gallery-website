@@ -53,10 +53,16 @@ export function Footer() {
           <div>
             <h4 className="text-lg font-semibold text-foreground mb-4">Explore</h4>
             <ul className="space-y-2 text-sm">
-              {['Gallery', 'Portfolio', 'About', 'Contact'].map((link) => (
-                <li key={link}>
-                  <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
-                    {link}
+              {[
+                { name: 'History', href: '#history' },
+                { name: 'About You', href: '#about' },
+                { name: 'Birthday', href: '#birthday' },
+                { name: 'Favorites', href: '#favorites' },
+                { name: 'Photobooth', href: '#photobooth' }
+              ].map((link) => (
+                <li key={link.name}>
+                  <a href={link.href} className="text-muted-foreground hover:text-primary transition-colors">
+                    {link.name}
                   </a>
                 </li>
               ))}
@@ -92,7 +98,7 @@ export function Footer() {
         {/* Divider */}
         <div className="border-t border-border pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-muted-foreground">
-            <p>&copy; 2024 Rica Marie Huyo-a Caayon. All rights reserved.</p>
+            <p>&copy; 2026 mylittlefoodcritic. All rights reserved.</p>
             <div className="flex gap-6">
               <a href="#" className="hover:text-primary transition-colors">
                 Privacy
