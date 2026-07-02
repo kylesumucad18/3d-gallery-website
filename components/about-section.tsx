@@ -22,6 +22,12 @@ export function AboutSection() {
     setShowModal(false)
   }
 
+  // ============================================================================
+  // 🎨 HOW TO CHANGE ICONS (This section uses icons instead of photos):
+  // 1. Find an icon you like from lucide-react (https://lucide.dev/icons)
+  // 2. Import it at the top of the file (e.g., `import { Heart, Star } from 'lucide-react'`)
+  // 3. Change the `icon` property below to your new icon name
+  // ============================================================================
   const features = [
     {
       icon: Heart,

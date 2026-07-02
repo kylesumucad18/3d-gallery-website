@@ -16,6 +16,11 @@ export function FavoritesSection() {
   const [playingId, setPlayingId] = useState<number | null>(null)
   const [expandedId, setExpandedId] = useState<number | null>(null)
 
+  // ============================================================================
+  // 📸 HOW TO CHANGE PHOTOS:
+  // 1. Add your new image files to the `public` folder in your project
+  // 2. Change the `image` path below to match your filename (e.g., '/my-photo.jpg')
+  // ============================================================================
   const favorites: FavoriteCard[] = [
     {
       id: 1,

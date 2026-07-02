@@ -11,6 +11,12 @@ export function BirthdaySection() {
   const [showModal, setShowModal] = useState(false)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
 
+  // ============================================================================
+  // 📸 HOW TO CHANGE CAROUSEL PHOTOS:
+  // 1. Add your new image files to the `public` folder in your project
+  // 2. Replace the paths below with your new filenames (e.g., '/my-photo.jpg')
+  // Note: You can add as many photos as you want by adding more strings to this list!
+  // ============================================================================
   const carouselImages = [
     '/portfolio-1.png',
     '/portfolio-2.png',
@@ -49,26 +55,7 @@ export function BirthdaySection() {
     setCurrentImageIndex((prev) => (prev - 1 + carouselImages.length) % carouselImages.length)
   }
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.15,
-        delayChildren: 0.2,
-      },
-    },
-  }
-
-  const itemVariants = {
-    hidden: { opacity: 0, scale: 0.9, y: 20 },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      y: 0,
-      transition: { duration: 0.6 },
-    },
-  }
+  // Removed variants to prevent framer-motion mounting bugs
 
   return (
     <section id="birthday" className="relative py-32 px-6 bg-gradient-to-b from-card to-background overflow-hidden">
@@ -94,35 +81,26 @@ export function BirthdaySection() {
             </button>
           </motion.div>
         ) : (
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: '-100px' }}
-            className="text-center"
-          >
-            <motion.div variants={itemVariants} className="mb-8">
+          <div className="text-center animate-in fade-in zoom-in duration-700">
+            <div className="mb-8">
               <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full border border-primary/20">
                 <Sparkles className="text-primary" size={18} />
                 <span className="text-primary text-sm font-semibold uppercase tracking-widest">Special Celebration</span>
                 <Sparkles className="text-primary" size={18} />
               </div>
-            </motion.div>
+            </div>
 
-            <motion.h2 variants={itemVariants} className="text-5xl md:text-7xl font-bold text-foreground mb-8 leading-tight">
+            <h2 className="text-5xl md:text-7xl font-bold text-foreground mb-8 leading-tight">
               Happy <span className="text-primary">Birthday</span>
-            </motion.h2>
+            </h2>
 
-            <motion.p
-              variants={itemVariants}
-              className="text-xl md:text-2xl text-muted-foreground mb-12 max-w-2xl mx-auto leading-relaxed text-balance"
-            >
+            <p className="text-xl md:text-2xl text-muted-foreground mb-12 max-w-2xl mx-auto leading-relaxed text-balance">
               Rica, this special day celebrates you and all the beauty you bring to everyone around you. Here&apos;s to capturing
               more beautiful moments and creating more timeless memories.
-            </motion.p>
+            </p>
 
             {/* Image Carousel */}
-            <motion.div variants={itemVariants} className="mb-12">
+            <div className="mb-12">
               <div className="relative group rounded-2xl overflow-hidden mb-6 h-80 md:h-96">
                 <motion.div
                   key={currentImageIndex}
@@ -169,27 +147,26 @@ export function BirthdaySection() {
                   ))}
                 </div>
               </div>
-            </motion.div>
+            </div>
 
-            <motion.div variants={itemVariants} className="space-y-6">
+            <div className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {[
                   { label: 'Years of Excellence', value: '10+' },
                   { label: 'Photos Captured', value: '50K+' },
                   { label: 'Happy Clients', value: '500+' },
                 ].map((stat, index) => (
-                  <motion.div
+                  <div
                     key={index}
-                    variants={itemVariants}
                     className="p-6 bg-background border border-border rounded-xl hover:border-primary/50 transition-colors"
                   >
                     <div className="text-4xl font-bold text-primary mb-2">{stat.value}</div>
                     <div className="text-sm text-muted-foreground">{stat.label}</div>
-                  </motion.div>
+                  </div>
                 ))}
               </div>
 
-              <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4 justify-center pt-8">
+              <div className="flex flex-col sm:flex-row gap-4 justify-center pt-8">
                 <button className="flex items-center justify-center gap-2 px-8 py-4 bg-primary text-primary-foreground font-semibold rounded-lg hover:bg-primary/90 transition-colors">
                   <Gift size={20} />
                   Send a Message
@@ -197,9 +174,9 @@ export function BirthdaySection() {
                 <button className="px-8 py-4 border border-primary text-primary font-semibold rounded-lg hover:bg-primary/10 transition-colors">
                   View All Photos
                 </button>
-              </motion.div>
-            </motion.div>
-          </motion.div>
+              </div>
+            </div>
+          </div>
         )}
 
         <VerificationModal
