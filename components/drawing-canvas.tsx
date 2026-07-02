@@ -27,22 +27,43 @@ export function DrawingCanvas({ onDataUrlChange, brushColor, isErasing, clearTri
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [clearTrigger])
 
+  // Helper function to get correct mouse position accounting for canvas resolution vs CSS display size
+  const getMousePos = (e: React.MouseEvent | React.TouchEvent): { x: number; y: number } | null => {
+    const canvas = canvasRef.current
+    if (!canvas) return null
+
+    const rect = canvas.getBoundingClientRect()
+    let clientX: number, clientY: number
+
+    if ('touches' in e) {
+      clientX = e.touches[0].clientX
+      clientY = e.touches[0].clientY
+    } else {
+      clientX = e.clientX
+      clientY = e.clientY
+    }
+
+    // Map CSS display coordinates to internal canvas resolution (400x225)
+    const scaleX = canvas.width / rect.width
+    const scaleY = canvas.height / rect.height
+
+    const x = (clientX - rect.left) * scaleX
+    const y = (clientY - rect.top) * scaleY
+
+    return { x, y }
+  }
+
   const startDrawing = (e: React.MouseEvent | React.TouchEvent) => {
     const canvas = canvasRef.current
     if (!canvas) return
     const ctx = canvas.getContext('2d')
     if (!ctx) return
-    const rect = canvas.getBoundingClientRect()
-    let x, y
-    if ('touches' in e) {
-      x = e.touches[0].clientX - rect.left
-      y = e.touches[0].clientY - rect.top
-    } else {
-      x = e.nativeEvent.offsetX
-      y = e.nativeEvent.offsetY
-    }
+
+    const pos = getMousePos(e)
+    if (!pos) return
+
     ctx.beginPath()
-    ctx.moveTo(x, y)
+    ctx.moveTo(pos.x, pos.y)
     setIsDrawing(true)
   }
 
@@ -52,16 +73,12 @@ export function DrawingCanvas({ onDataUrlChange, brushColor, isErasing, clearTri
     if (!canvas) return
     const ctx = canvas.getContext('2d')
     if (!ctx) return
-    const rect = canvas.getBoundingClientRect()
-    let x, y
-    if ('touches' in e) {
-      x = e.touches[0].clientX - rect.left
-      y = e.touches[0].clientY - rect.top
-    } else {
-      x = e.nativeEvent.offsetX
-      y = e.nativeEvent.offsetY
-    }
-    ctx.lineTo(x, y)
+
+    const pos = getMousePos(e)
+    if (!pos) return
+
+    ctx.lineTo(pos.x, pos.y)
+
     if (isErasing) {
       ctx.globalCompositeOperation = 'destination-out'
       ctx.lineWidth = 15
@@ -71,6 +88,7 @@ export function DrawingCanvas({ onDataUrlChange, brushColor, isErasing, clearTri
       ctx.lineWidth = 5
       ctx.strokeStyle = brushColor
     }
+
     ctx.lineCap = 'round'
     ctx.lineJoin = 'round'
     ctx.stroke()
@@ -87,7 +105,7 @@ export function DrawingCanvas({ onDataUrlChange, brushColor, isErasing, clearTri
   }
 
   return (
-    <div className="relative border-2 border-dashed border-gray-300 rounded-lg overflow-hidden bg-black/10 w-full aspect-video shadow-inner">
+    <div className="relative rounded-xl overflow-hidden bg-gradient-to-br from-gray-900 to-black w-full aspect-video shadow-2xl border border-white/10">
       <canvas
         ref={canvasRef}
         width={400}
@@ -99,12 +117,12 @@ export function DrawingCanvas({ onDataUrlChange, brushColor, isErasing, clearTri
         onTouchStart={startDrawing}
         onTouchMove={draw}
         onTouchEnd={stopDrawing}
-        className="cursor-crosshair touch-none w-full h-full object-contain"
+        className="cursor-crosshair touch-none w-full h-full object-contain block"
       />
       {!hasDrawn && (
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <span className="text-foreground/50 text-sm font-bold bg-background/50 px-4 py-2 rounded-full backdrop-blur-sm">
-            Draw your 5px doodle!
+          <span className="text-white/60 text-sm font-semibold bg-black/40 px-4 py-2 rounded-full backdrop-blur-md border border-white/10">
+            Draw your doodle here
           </span>
         </div>
       )}
