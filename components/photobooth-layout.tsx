@@ -14,6 +14,15 @@ interface PhotoboothLayoutProps {
 
 type LayoutType = 'strip-3' | 'strip-4' | '4R-split' | '4R-grid'
 
+const PRESET_DOODLES = [
+  { id: 'rabbit', label: 'Rabbit', emoji: '🐇' },
+  { id: 'peacock', label: 'Peacock', emoji: '🦚' },
+  { id: 'giraffe', label: 'Giraffe', emoji: '🦒' },
+  { id: 'lion', label: 'Lion', emoji: '🦁' },
+  { id: 'eagle', label: 'Eagle', emoji: '🦅' },
+  { id: 'dinosaur', label: 'Dinosaur', emoji: '🦖' }
+]
+
 const getLayoutConfig = (layout: string) => {
   switch (layout) {
     case 'M':
@@ -107,6 +116,7 @@ export function PhotoboothLayout({ layout, theme }: PhotoboothLayoutProps) {
   const [titleText, setTitleText] = useState('Rica Marie')
   const [subtitleText, setSubtitleText] = useState('Happy Birthday!')
   const [doodleDataUrls, setDoodleDataUrls] = useState<(string | null)[]>([null, null, null])
+  const [selectedEmojis, setSelectedEmojis] = useState<string[]>([])
   const [doodleCount, setDoodleCount] = useState(1)
   const [brushColor, setBrushColor] = useState('#ffffff')
   const [isErasing, setIsErasing] = useState(false)
@@ -271,36 +281,52 @@ export function PhotoboothLayout({ layout, theme }: PhotoboothLayoutProps) {
       })
     }
 
-    // Draw doodles first
+    // Draw doodles and emojis
     const validDoodles = doodleDataUrls.filter(Boolean)
     
-    if (validDoodles.length > 0) {
+    if (validDoodles.length > 0 || selectedEmojis.length > 0) {
       const finishDrawingDoodles = () => {
+        if (selectedEmojis.length > 0) {
+          ctx.globalAlpha = 0.85
+          ctx.font = '50px Arial'
+          ctx.textAlign = 'center'
+          ctx.textBaseline = 'middle'
+          for (let i = 0; i < 30; i++) {
+            const emoji = selectedEmojis[Math.floor(Math.random() * selectedEmojis.length)]
+            const dx = Math.random() * canvas.width
+            const dy = Math.random() * canvas.height
+            ctx.fillText(emoji, dx, dy)
+          }
+        }
         ctx.globalAlpha = 1.0
         ctx.filter = 'none' 
         continueDrawingPhotos()
       }
 
-      let loadedCount = 0
-      validDoodles.forEach((url) => {
-        const doodleImg = new Image()
-        doodleImg.onload = () => {
-          ctx.globalAlpha = 0.85
-          ctx.filter = 'blur(2px)' 
-          // Stamp each doodle patch randomly
-          for (let i = 0; i < 10; i++) {
-            const x = Math.random() * canvas.width - 100
-            const y = Math.random() * canvas.height - 100
-            ctx.drawImage(doodleImg, x, y, 350, 250)
+      if (validDoodles.length > 0) {
+        let loadedCount = 0
+        validDoodles.forEach((url) => {
+          const doodleImg = new Image()
+          doodleImg.onload = () => {
+            ctx.globalAlpha = 0.85
+            ctx.filter = 'blur(2px)' 
+            // Stamp each doodle patch randomly
+            for (let i = 0; i < 10; i++) {
+              const x = Math.random() * canvas.width - 100
+              const y = Math.random() * canvas.height - 100
+              ctx.drawImage(doodleImg, x, y, 350, 250)
+            }
+            
+            loadedCount++
+            if (loadedCount === validDoodles.length) {
+              finishDrawingDoodles()
+            }
           }
-          
-          loadedCount++
-          if (loadedCount === validDoodles.length) {
-            finishDrawingDoodles()
-          }
-        }
-        if (url) doodleImg.src = url
-      })
+          if (url) doodleImg.src = url
+        })
+      } else {
+        finishDrawingDoodles()
+      }
     } else {
       continueDrawingPhotos()
     }
@@ -414,6 +440,41 @@ export function PhotoboothLayout({ layout, theme }: PhotoboothLayoutProps) {
                         <span className="text-xs font-semibold mt-1">Add</span>
                       </button>
                     )}
+                  </div>
+
+                  <div className="pt-6 mt-6 border-t border-border/50">
+                    <p className="text-sm font-semibold text-muted-foreground mb-3">Or choose up to 3 cute emojis:</p>
+                    <div className="flex flex-wrap gap-3 justify-start">
+                      {PRESET_DOODLES.map(d => {
+                        const isSelected = selectedEmojis.includes(d.emoji)
+                        return (
+                          <button
+                            key={d.id}
+                            onClick={() => {
+                              let next = [...selectedEmojis]
+                              if (next.includes(d.emoji)) {
+                                next = next.filter(e => e !== d.emoji)
+                              } else {
+                                if (next.length >= 3) {
+                                  alert('You can only select a maximum of 3 cute emojis!')
+                                  return
+                                }
+                                next.push(d.emoji)
+                              }
+                              setSelectedEmojis(next)
+                            }}
+                            className={`flex flex-col items-center p-2 rounded-xl border-2 transition-all ${
+                              isSelected 
+                                ? 'border-primary bg-primary/10 scale-110 shadow-sm' 
+                                : 'border-border bg-card hover:border-primary/50 hover:bg-muted'
+                            }`}
+                          >
+                            <span className="text-2xl">{d.emoji}</span>
+                            <span className="text-xs font-semibold mt-1">{d.label}</span>
+                          </button>
+                        )
+                      })}
+                    </div>
                   </div>
                 </div>
 
