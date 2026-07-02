@@ -101,12 +101,11 @@ export function ImageColorPicker({ color, onChange }: ImageColorPickerProps) {
     let saturation = (distance / radius) * 100
     if (saturation > 100) saturation = 100
 
-    setHsl(prev => {
-      const next = { ...prev, h: hue, s: saturation }
-      onChange(hslToHex(next.h, next.s, next.l))
-      return next
-    })
-  }, [isDragging, onChange])
+    const currentHsl = hexToHsl(color)
+    const nextHsl = { ...currentHsl, h: hue, s: saturation }
+    setHsl(nextHsl)
+    onChange(hslToHex(nextHsl.h, nextHsl.s, nextHsl.l))
+  }, [isDragging, color, onChange])
 
   const handleWheelPointerUp = useCallback(() => {
     setIsDragging(false)
@@ -125,11 +124,10 @@ export function ImageColorPicker({ color, onChange }: ImageColorPickerProps) {
 
   const handleLightnessChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const l = parseFloat(e.target.value)
-    setHsl(prev => {
-      const next = { ...prev, l }
-      onChange(hslToHex(next.h, next.s, next.l))
-      return next
-    })
+    const currentHsl = hexToHsl(color)
+    const nextHsl = { ...currentHsl, l }
+    setHsl(nextHsl)
+    onChange(hslToHex(nextHsl.h, nextHsl.s, nextHsl.l))
   }
 
   const handleRgbChange = (component: 'r'|'g'|'b', val: string) => {
@@ -138,12 +136,12 @@ export function ImageColorPicker({ color, onChange }: ImageColorPickerProps) {
     let num = parseInt(val)
     if (isNaN(num)) return
     num = Math.max(0, Math.min(255, num))
-    setRgbInput(prev => {
-      const next = { ...prev, [component]: String(num) }
-      const hex = `#${parseInt(next.r||'0').toString(16).padStart(2,'0')}${parseInt(next.g||'0').toString(16).padStart(2,'0')}${parseInt(next.b||'0').toString(16).padStart(2,'0')}`.toUpperCase()
-      onChange(hex)
-      return next
-    })
+    setRgbInput(prev => ({ ...prev, [component]: String(num) }))
+    
+    const rgb = hexToRgbObj(color)
+    const nextRgb = { ...rgb, [component]: num }
+    const hex = `#${nextRgb.r.toString(16).padStart(2,'0')}${nextRgb.g.toString(16).padStart(2,'0')}${nextRgb.b.toString(16).padStart(2,'0')}`.toUpperCase()
+    onChange(hex)
   }
 
   const handleHslInputChange = (component: 'h'|'s'|'l', val: string) => {
@@ -153,11 +151,11 @@ export function ImageColorPicker({ color, onChange }: ImageColorPickerProps) {
     if (isNaN(num)) return
     if (component === 'h') num = Math.max(0, Math.min(360, num))
     else num = Math.max(0, Math.min(100, num))
-    setHslInput(prev => {
-      const next = { ...prev, [component]: String(num) }
-      onChange(hslToHex(parseFloat(next.h||'0'), parseFloat(next.s||'0'), parseFloat(next.l||'0')))
-      return next
-    })
+    setHslInput(prev => ({ ...prev, [component]: String(num) }))
+    
+    const currentHsl = hexToHsl(color)
+    const nextHsl = { ...currentHsl, [component]: num }
+    onChange(hslToHex(nextHsl.h, nextHsl.s, nextHsl.l))
   }
 
   const handleHexChange = (e: React.ChangeEvent<HTMLInputElement>) => {
