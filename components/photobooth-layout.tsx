@@ -7,6 +7,7 @@ import Link from 'next/link'
 import { ImageColorPicker } from './image-color-picker'
 import { DrawingCanvas } from './drawing-canvas'
 import { PresetDoodles } from './preset-doodles'
+import { ClipArtDoodles } from './clipart-doodles'
 
 interface PhotoboothLayoutProps {
   layout: 'M' | 'A' | 'R' | 'I' | 'E' | 'H'
@@ -116,8 +117,10 @@ export function PhotoboothLayout({ layout, theme }: PhotoboothLayoutProps) {
   const [subtitleText, setSubtitleText] = useState('Happy Birthday!')
   // Store custom-drawn doodles (up to 3)
   const [doodleDataUrls, setDoodleDataUrls] = useState<(string | null)[]>([null, null, null])
-  // Store selected preset animal doodle (only 1 can be selected - used as background decoration on sides)
-  const [presetDoodleSrc, setPresetDoodleSrc] = useState<string | null>(null)
+  // Store selected preset animal doodles (up to 3 animals for side backgrounds)
+  const [presetDoodleSrcs, setPresetDoodleSrcs] = useState<string[]>([])
+  // Store selected clipart pattern doodle (only 1 pattern for overlay decoration)
+  const [clipartDoodleSrc, setClipartDoodleSrc] = useState<string | null>(null)
   const [doodleCount, setDoodleCount] = useState(1)
   const [brushColor, setBrushColor] = useState('#ffffff')
   const [isErasing, setIsErasing] = useState(false)
@@ -223,19 +226,21 @@ export function PhotoboothLayout({ layout, theme }: PhotoboothLayoutProps) {
 
     const drawDoodlesLayer = () => {
       // Collect all doodles to render:
-      // - Custom-drawn doodles (max 3) - these appear randomly
-      // - ONE preset animal doodle - this appears on the SIDES as background decoration
+      // - Custom-drawn doodles (max 3): Random placement across canvas
+      // - Preset animal doodles (up to 3): Placed on LEFT and RIGHT sides as background decorations
+      // - ClipArt pattern doodle (1): Overlay with random placements
       const customDoodles = doodleDataUrls.filter(Boolean)
-      const hasPresetDoodle = !!presetDoodleSrc
+      const hasPresetAnimals = presetDoodleSrcs.length > 0
+      const hasClipartPattern = !!clipartDoodleSrc
 
       // If no doodles, skip to text layer
-      if (customDoodles.length === 0 && !hasPresetDoodle) {
+      if (customDoodles.length === 0 && !hasPresetAnimals && !hasClipartPattern) {
         drawTextLayer()
         return
       }
 
       let loadedCount = 0
-      const totalDoodlesToLoad = customDoodles.length + (hasPresetDoodle ? 1 : 0)
+      const totalDoodlesToLoad = customDoodles.length + (hasPresetAnimals ? presetDoodleSrcs.length : 0) + (hasClipartPattern ? 1 : 0)
 
       // LOAD AND RENDER CUSTOM-DRAWN DOODLES (random placement across full canvas)
       customDoodles.forEach((url) => {
@@ -243,7 +248,7 @@ export function PhotoboothLayout({ layout, theme }: PhotoboothLayoutProps) {
         doodleImg.crossOrigin = 'anonymous'
         doodleImg.onload = () => {
           ctx.globalAlpha = 0.7
-          // Stamp custom doodle multiple times with random positions across entire canvas
+          // Stamp custom doodle multiple times with random positions
           for (let i = 0; i < 5; i++) {
             const x = Math.random() * (canvas.width - 200)
             const y = Math.random() * (canvas.height - 200)
@@ -259,30 +264,56 @@ export function PhotoboothLayout({ layout, theme }: PhotoboothLayoutProps) {
         doodleImg.src = url
       })
 
-      // LOAD AND RENDER PRESET ANIMAL DOODLE (only on SIDES, not center)
-      if (hasPresetDoodle) {
-        const presetImg = new Image()
-        presetImg.crossOrigin = 'anonymous'
-        presetImg.onload = () => {
-          ctx.globalAlpha = 0.6
-          // Define safe center zone where photos are located (don't place doodles here)
-          const centerMargin = 150
-          const sideWidth = 200
-          
-          // Place doodles ONLY on the LEFT and RIGHT sides, never in the center
-          const placements = [
-            // Left side doodles
-            { x: 0, y: Math.random() * (canvas.height - 150) },
-            { x: 10, y: Math.random() * (canvas.height - 150) + 50 },
-            // Right side doodles
-            { x: canvas.width - sideWidth, y: Math.random() * (canvas.height - 150) },
-            { x: canvas.width - sideWidth + 20, y: Math.random() * (canvas.height - 150) + 50 },
-          ]
+      // LOAD AND RENDER PRESET ANIMAL DOODLES (up to 3, placed on SIDES, not center)
+      if (hasPresetAnimals) {
+        presetDoodleSrcs.forEach((presetSrc) => {
+          const presetImg = new Image()
+          presetImg.crossOrigin = 'anonymous'
+          presetImg.onload = () => {
+            ctx.globalAlpha = 0.6
+            // Define safe center zone where photos are located
+            const sideWidth = 200
+            
+            // Place doodles ONLY on the LEFT and RIGHT sides, never in center
+            const placements = [
+              // Left side placements for first animal
+              { x: 0, y: Math.random() * (canvas.height - 150) },
+              { x: 10, y: Math.random() * (canvas.height - 150) + 50 },
+              // Right side placements for second animal
+              { x: canvas.width - sideWidth, y: Math.random() * (canvas.height - 150) },
+              { x: canvas.width - sideWidth + 20, y: Math.random() * (canvas.height - 150) + 50 },
+            ]
 
-          placements.forEach(({ x, y }) => {
-            const scale = 0.7 + Math.random() * 0.3
-            ctx.drawImage(presetImg, x, y, 250 * scale, 200 * scale)
-          })
+            // Each animal gets 2-3 placements on the sides
+            const placementsToUse = placements.slice(0, Math.min(3, placements.length))
+            placementsToUse.forEach(({ x, y }) => {
+              const scale = 0.7 + Math.random() * 0.3
+              ctx.drawImage(presetImg, x, y, 250 * scale, 200 * scale)
+            })
+
+            loadedCount++
+            if (loadedCount === totalDoodlesToLoad) {
+              ctx.globalAlpha = 1.0
+              drawTextLayer()
+            }
+          }
+          presetImg.src = presetSrc
+        })
+      }
+
+      // LOAD AND RENDER CLIPART PATTERN DOODLE (overlay on top, random placements)
+      if (hasClipartPattern) {
+        const clipartImg = new Image()
+        clipartImg.crossOrigin = 'anonymous'
+        clipartImg.onload = () => {
+          ctx.globalAlpha = 0.5
+          // Pattern overlay: distribute across full canvas with random rotations/placements
+          for (let i = 0; i < 3; i++) {
+            const x = Math.random() * (canvas.width - 250)
+            const y = Math.random() * (canvas.height - 250)
+            const scale = 0.6 + Math.random() * 0.4
+            ctx.drawImage(clipartImg, x, y, 300 * scale, 250 * scale)
+          }
 
           loadedCount++
           if (loadedCount === totalDoodlesToLoad) {
@@ -290,7 +321,7 @@ export function PhotoboothLayout({ layout, theme }: PhotoboothLayoutProps) {
             drawTextLayer()
           }
         }
-        presetImg.src = presetDoodleSrc
+        clipartImg.src = clipartDoodleSrc
       }
     }
 
@@ -402,11 +433,19 @@ export function PhotoboothLayout({ layout, theme }: PhotoboothLayoutProps) {
 
                 <div className="bg-gradient-to-br from-card/80 to-card/40 backdrop-blur-lg border border-border/50 rounded-2xl p-6 shadow-lg">
                   <div className="space-y-6">
-                    {/* Preset Doodles Section - User selects only ONE animal style for side decorations */}
+                    {/* Preset Animal Doodles Section - User can select UP TO 3 animals for side backgrounds */}
                     <PresetDoodles 
-                      selectedSrc={presetDoodleSrc}
-                      onSelectDoodle={(src) => {
-                        setPresetDoodleSrc(src)
+                      selectedSrcs={presetDoodleSrcs}
+                      onSelectDoodles={(srcs) => {
+                        setPresetDoodleSrcs(srcs)
+                      }}
+                    />
+
+                    {/* ClipArt Pattern Doodles Section - User selects only 1 pattern for overlay decoration */}
+                    <ClipArtDoodles
+                      selectedSrc={clipartDoodleSrc}
+                      onSelectClipArt={(src) => {
+                        setClipartDoodleSrc(src)
                       }}
                     />
 

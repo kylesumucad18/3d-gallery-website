@@ -2,11 +2,13 @@
 
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useEffect } from 'react'
-import { X, Mail, MessageCircle, ArrowLeft } from 'lucide-react'
+import { X, Mail, MessageCircle, ArrowLeft, Image as ImageIcon } from 'lucide-react'
+import { PhotoCarouselModal } from './photo-carousel-modal'
 
 export function LetterSection() {
   const [isVerified, setIsVerified] = useState(false)
   const [showModal, setShowModal] = useState(false)
+  const [showCarousel, setShowCarousel] = useState(false)
   const [step, setStep] = useState<'question' | 'why4' | 'messenger'>('question')
   const [input, setInput] = useState('')
   const [error, setError] = useState('')
