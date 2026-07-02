@@ -114,8 +114,10 @@ export function PhotoboothLayout({ layout, theme }: PhotoboothLayoutProps) {
   const [customColor, setCustomColor] = useState(THEME_DEFAULT_COLORS[theme] || '#0EA5E9')
   const [titleText, setTitleText] = useState('Rica Marie')
   const [subtitleText, setSubtitleText] = useState('Happy Birthday!')
+  // Store custom-drawn doodles (up to 3)
   const [doodleDataUrls, setDoodleDataUrls] = useState<(string | null)[]>([null, null, null])
-  const [presetDoodleSrcs, setPresetDoodleSrcs] = useState<string[]>([])
+  // Store selected preset animal doodle (only 1 can be selected - used as background decoration on sides)
+  const [presetDoodleSrc, setPresetDoodleSrc] = useState<string | null>(null)
   const [doodleCount, setDoodleCount] = useState(1)
   const [brushColor, setBrushColor] = useState('#ffffff')
   const [isErasing, setIsErasing] = useState(false)
@@ -220,37 +222,76 @@ export function PhotoboothLayout({ layout, theme }: PhotoboothLayoutProps) {
     }
 
     const drawDoodlesLayer = () => {
-      const allDoodles = [
-        ...doodleDataUrls.filter(Boolean),
-        ...presetDoodleSrcs
-      ]
+      // Collect all doodles to render:
+      // - Custom-drawn doodles (max 3) - these appear randomly
+      // - ONE preset animal doodle - this appears on the SIDES as background decoration
+      const customDoodles = doodleDataUrls.filter(Boolean)
+      const hasPresetDoodle = !!presetDoodleSrc
 
-      if (allDoodles.length === 0) {
+      // If no doodles, skip to text layer
+      if (customDoodles.length === 0 && !hasPresetDoodle) {
         drawTextLayer()
         return
       }
 
       let loadedCount = 0
-      allDoodles.forEach((url) => {
+      const totalDoodlesToLoad = customDoodles.length + (hasPresetDoodle ? 1 : 0)
+
+      // LOAD AND RENDER CUSTOM-DRAWN DOODLES (random placement across full canvas)
+      customDoodles.forEach((url) => {
         const doodleImg = new Image()
         doodleImg.crossOrigin = 'anonymous'
         doodleImg.onload = () => {
           ctx.globalAlpha = 0.7
-          // Stamp doodle multiple times with random positions and scales
-          for (let i = 0; i < 8; i++) {
+          // Stamp custom doodle multiple times with random positions across entire canvas
+          for (let i = 0; i < 5; i++) {
             const x = Math.random() * (canvas.width - 200)
             const y = Math.random() * (canvas.height - 200)
-            const scale = 0.8 + Math.random() * 0.4 // Scale between 0.8 and 1.2
+            const scale = 0.8 + Math.random() * 0.4
             ctx.drawImage(doodleImg, x, y, 250 * scale, 200 * scale)
           }
           loadedCount++
-          if (loadedCount === allDoodles.length) {
+          if (loadedCount === totalDoodlesToLoad) {
             ctx.globalAlpha = 1.0
             drawTextLayer()
           }
         }
         doodleImg.src = url
       })
+
+      // LOAD AND RENDER PRESET ANIMAL DOODLE (only on SIDES, not center)
+      if (hasPresetDoodle) {
+        const presetImg = new Image()
+        presetImg.crossOrigin = 'anonymous'
+        presetImg.onload = () => {
+          ctx.globalAlpha = 0.6
+          // Define safe center zone where photos are located (don't place doodles here)
+          const centerMargin = 150
+          const sideWidth = 200
+          
+          // Place doodles ONLY on the LEFT and RIGHT sides, never in the center
+          const placements = [
+            // Left side doodles
+            { x: 0, y: Math.random() * (canvas.height - 150) },
+            { x: 10, y: Math.random() * (canvas.height - 150) + 50 },
+            // Right side doodles
+            { x: canvas.width - sideWidth, y: Math.random() * (canvas.height - 150) },
+            { x: canvas.width - sideWidth + 20, y: Math.random() * (canvas.height - 150) + 50 },
+          ]
+
+          placements.forEach(({ x, y }) => {
+            const scale = 0.7 + Math.random() * 0.3
+            ctx.drawImage(presetImg, x, y, 250 * scale, 200 * scale)
+          })
+
+          loadedCount++
+          if (loadedCount === totalDoodlesToLoad) {
+            ctx.globalAlpha = 1.0
+            drawTextLayer()
+          }
+        }
+        presetImg.src = presetDoodleSrc
+      }
     }
 
     const drawTextLayer = () => {
@@ -331,9 +372,9 @@ export function PhotoboothLayout({ layout, theme }: PhotoboothLayoutProps) {
         </div>
       </div>
 
-      {/* Main Content */}
-      <div className={`flex-1 flex flex-col transition-all duration-500 ${cameraActive ? 'lg:flex-row-reverse' : 'lg:flex-row'} ${cameraActive ? 'p-4' : 'p-6'} gap-8 max-w-[1600px] mx-auto w-full`}>
-        {/* Left Column (Controls & Camera) */}
+      {/* Main Content - ALWAYS maintain camera on LEFT, preview on RIGHT */}
+      <div className={`flex-1 flex flex-col lg:flex-row ${cameraActive ? 'p-4' : 'p-6'} gap-8 max-w-[1600px] mx-auto w-full`}>
+        {/* Left Column - Camera and Customize controls always stay on the LEFT side */}
         <div className={`${cameraActive ? 'flex-1' : 'flex-1'} space-y-8 min-w-0`}>
           {showThemeSelector && (
             <motion.div
@@ -361,10 +402,11 @@ export function PhotoboothLayout({ layout, theme }: PhotoboothLayoutProps) {
 
                 <div className="bg-gradient-to-br from-card/80 to-card/40 backdrop-blur-lg border border-border/50 rounded-2xl p-6 shadow-lg">
                   <div className="space-y-6">
-                    {/* Preset Doodles Section */}
+                    {/* Preset Doodles Section - User selects only ONE animal style for side decorations */}
                     <PresetDoodles 
+                      selectedSrc={presetDoodleSrc}
                       onSelectDoodle={(src) => {
-                        setPresetDoodleSrcs(prev => [...prev, src])
+                        setPresetDoodleSrc(src)
                       }}
                     />
 
@@ -555,12 +597,12 @@ export function PhotoboothLayout({ layout, theme }: PhotoboothLayoutProps) {
           )}
         </div>
 
-        {/* Right Column (Live Preview & Downloads) */}
+        {/* Right Column - Live Preview & Downloads (always on the RIGHT) */}
         <motion.div
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.2 }}
-          className={`${cameraActive ? 'hidden lg:flex flex-col' : 'w-full lg:w-[480px]'} shrink-0 space-y-6`}
+          className={`w-full lg:w-[480px] shrink-0 space-y-6`}
         >
           <div className="p-8 bg-gradient-to-br from-white/8 to-white/3 backdrop-blur-2xl rounded-3xl border border-white/15 shadow-[0_12px_40px_rgba(0,0,0,0.15)] sticky top-24">
             <h3 className="text-xl font-black text-foreground mb-6 tracking-tight flex items-center gap-2">

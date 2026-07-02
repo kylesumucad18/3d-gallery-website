@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Image from 'next/image'
-import { Sparkles, Zap } from 'lucide-react'
+import { Sparkles, Zap, X } from 'lucide-react'
 
 interface PresetDoodle {
   id: string
@@ -20,19 +20,22 @@ const PRESET_DOODLES: PresetDoodle[] = [
 ]
 
 interface PresetDoodlesProps {
-  onSelectDoodle: (src: string) => void
+  onSelectDoodle: (src: string | null) => void
+  selectedSrc: string | null
 }
 
-export function PresetDoodles({ onSelectDoodle }: PresetDoodlesProps) {
-  const [selectedId, setSelectedId] = useState<string | null>(null)
+export function PresetDoodles({ onSelectDoodle, selectedSrc }: PresetDoodlesProps) {
+  // Determine selected ID based on the provided selectedSrc prop
+  const selectedId = PRESET_DOODLES.find(d => d.src === selectedSrc)?.id || null
 
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-2 mb-4">
         <Zap size={18} className="text-primary" />
         <div>
-          <h4 className="text-sm font-bold text-foreground">Animal Doodles</h4>
-          <p className="text-xs text-muted-foreground">Click to add adorable animal overlays</p>
+          <h4 className="text-sm font-bold text-foreground">Preset Doodle</h4>
+          {/* User can only select ONE preset doodle style to apply to the final photobooth output */}
+          <p className="text-xs text-muted-foreground">Select 1 animal style for side decorations</p>
         </div>
       </div>
 
@@ -41,8 +44,9 @@ export function PresetDoodles({ onSelectDoodle }: PresetDoodlesProps) {
           <button
             key={doodle.id}
             onClick={() => {
-              setSelectedId(doodle.id)
-              onSelectDoodle(doodle.src)
+              // Allow toggling: if already selected, deselect it (null); otherwise select it
+              const isAlreadySelected = selectedId === doodle.id
+              onSelectDoodle(isAlreadySelected ? null : doodle.src)
             }}
             className={`relative group p-3 rounded-xl border-2 transition-all duration-200 overflow-hidden aspect-square flex items-center justify-center ${
               selectedId === doodle.id
@@ -74,6 +78,23 @@ export function PresetDoodles({ onSelectDoodle }: PresetDoodlesProps) {
           </button>
         ))}
       </div>
+
+      {/* Display feedback when a preset doodle is selected */}
+      {selectedId && (
+        <div className="bg-primary/10 border border-primary/30 rounded-lg p-3 mt-4">
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-semibold text-foreground">
+              Selected: {PRESET_DOODLES.find(d => d.id === selectedId)?.name}
+            </span>
+            <button
+              onClick={() => onSelectDoodle(null)}
+              className="text-xs text-primary hover:text-destructive transition-colors flex items-center gap-1"
+            >
+              <X size={14} /> Clear
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
