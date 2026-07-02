@@ -10,7 +10,14 @@ import { PresetDoodles } from './preset-doodles'
 
 interface PhotoboothLayoutProps {
   layout: 'M' | 'A' | 'R' | 'I' | 'E' | 'H'
-  theme: 'minimalistic' | 'coquette'
+  theme: 'default' | 'minimalistic' | 'medtech' | 'coquette'
+}
+
+const THEME_DEFAULT_COLORS: Record<string, string> = {
+  default: '#0EA5E9',
+  minimalistic: '#000000',
+  medtech: '#0369A1',
+  coquette: '#EC4899',
 }
 
 type LayoutType = 'strip-3' | 'strip-4' | '4R-split' | '4R-grid'
@@ -104,7 +111,7 @@ export function PhotoboothLayout({ layout, theme }: PhotoboothLayoutProps) {
   const [cameraActive, setCameraActive] = useState(false)
   const [photos, setPhotos] = useState<string[]>([])
   const [showThemeSelector, setShowThemeSelector] = useState(true)
-  const [customColor, setCustomColor] = useState(theme === 'coquette' ? '#FBCFE8' : theme === 'medtech' ? '#0EA5E9' : '#E6C27A')
+  const [customColor, setCustomColor] = useState(THEME_DEFAULT_COLORS[theme] || '#0EA5E9')
   const [titleText, setTitleText] = useState('Rica Marie')
   const [subtitleText, setSubtitleText] = useState('Happy Birthday!')
   const [doodleDataUrls, setDoodleDataUrls] = useState<(string | null)[]>([null, null, null])

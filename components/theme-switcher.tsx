@@ -1,9 +1,16 @@
 'use client'
 
-import { useTheme } from '@/context/theme-context'
+import { useTheme, type Theme } from '@/context/theme-context'
 import { motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
 import dynamic from 'next/dynamic'
+
+const THEME_COLORS: Record<Theme, { bg: string; text: string; description: string }> = {
+  default: { bg: '#0EA5E9', text: '#FFFFFF', description: 'Modern Blue' },
+  minimalistic: { bg: '#000000', text: '#FFFFFF', description: 'Grayscale' },
+  medtech: { bg: '#0369A1', text: '#FFFFFF', description: 'Medical Blue' },
+  coquette: { bg: '#EC4899', text: '#FFFFFF', description: 'Pink Rose' },
+}
 
 function ThemeSwitcherInner() {
   const { theme, setTheme } = useTheme()
@@ -15,45 +22,36 @@ function ThemeSwitcherInner() {
 
   if (!mounted) return null
 
+  const themeEntries: Array<[Theme, { bg: string; text: string; description: string }]> = Object.entries(
+    THEME_COLORS
+  ) as any
+
   return (
     <motion.div
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="flex items-center gap-2 p-1 bg-background/50 backdrop-blur-md border border-border rounded-full"
+      className="flex items-center gap-1.5 p-1.5 bg-card/50 backdrop-blur-md border border-border/50 rounded-full shadow-lg hover:shadow-xl transition-shadow"
     >
-      <button
-        onClick={() => setTheme('minimalistic')}
-        className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-all ${
-          theme === 'minimalistic'
-            ? 'bg-yellow-600 text-white shadow-md'
-            : 'text-muted-foreground hover:text-foreground'
-        }`}
-        title="Minimalistic Default Theme"
-      >
-        Minimalistic
-      </button>
-      <button
-        onClick={() => setTheme('medtech')}
-        className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-all ${
-          theme === 'medtech'
-            ? 'bg-blue-500 text-white shadow-md'
-            : 'text-muted-foreground hover:text-foreground'
-        }`}
-        title="Professional Blue Theme"
-      >
-        MedTech
-      </button>
-      <button
-        onClick={() => setTheme('coquette')}
-        className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-all ${
-          theme === 'coquette'
-            ? 'bg-pink-500 text-white shadow-md'
-            : 'text-muted-foreground hover:text-foreground'
-        }`}
-        title="Pink Coquette Theme"
-      >
-        Coquette
-      </button>
+      {themeEntries.map(([themeKey, { bg, text, description }]) => (
+        <motion.button
+          key={themeKey}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => setTheme(themeKey)}
+          className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 ${
+            theme === themeKey
+              ? 'text-white shadow-md ring-2 ring-offset-1'
+              : 'text-muted-foreground hover:text-foreground'
+          }`}
+          style={{
+            backgroundColor: theme === themeKey ? bg : 'transparent',
+            ringColor: theme === themeKey ? bg : 'transparent',
+          }}
+          title={description}
+        >
+          {themeKey.charAt(0).toUpperCase() + themeKey.slice(1)}
+        </motion.button>
+      ))}
     </motion.div>
   )
 }
