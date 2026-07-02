@@ -40,46 +40,84 @@ const getLayoutConfig = (layout: string) => {
   }
 }
 
-function PreviewCanvas({ layout, photos, customColor, count }: { layout: LayoutType, photos: string[], customColor: string, count: number }) {
+function PreviewCanvas({ layout, photos, customColor, count, patternSrc, presetSrcs = [] }: { layout: LayoutType, photos: string[], customColor: string, count: number, patternSrc?: string | null, presetSrcs?: string[] }) {
   const emptyBoxes = Array.from({ length: count - photos.length })
+
+  const renderBackground = () => (
+    <>
+      <div className="absolute inset-0" style={{ backgroundColor: customColor }} />
+      {patternSrc && (
+        <div 
+          className="absolute inset-0 opacity-30" 
+          style={{ 
+            backgroundImage: `url(${patternSrc})`, 
+            backgroundSize: '100px 100px', 
+            backgroundRepeat: 'repeat' 
+          }} 
+        />
+      )}
+    </>
+  )
 
   if (layout === 'strip-3' || layout === 'strip-4') {
     return (
-      <div className="w-48 mx-auto p-4 rounded-2xl shadow-2xl border border-white/10 transition-all duration-300 hover:shadow-3xl" style={{ backgroundColor: customColor }}>
-        <div className="flex flex-col gap-3">
+      <div className="relative w-48 mx-auto p-4 rounded-2xl shadow-2xl border border-white/10 transition-all duration-300 hover:shadow-3xl overflow-hidden">
+        {renderBackground()}
+        <div className="relative z-10 flex flex-col gap-3">
           {photos.map((p, i) => (
-            <img key={i} src={p} alt="pose" className="w-full aspect-[4/3] object-cover bg-black" />
+            <div key={i} className="relative w-full aspect-[4/3] rounded-lg overflow-hidden shadow-inner">
+              <img src={p} alt="pose" className="w-full h-full object-cover bg-black" />
+              <div className="absolute inset-0 bg-[radial-gradient(circle,transparent_50%,rgba(0,0,0,0.45)_120%)] pointer-events-none" />
+            </div>
           ))}
           {emptyBoxes.map((_, i) => (
-            <div key={`e-${i}`} className="w-full aspect-[4/3] bg-black/20 flex items-center justify-center border border-dashed border-black/30">
+            <div key={`e-${i}`} className="w-full aspect-[4/3] bg-black/20 flex items-center justify-center border border-dashed border-black/30 backdrop-blur-sm rounded-lg overflow-hidden">
               <span className="text-sm font-bold opacity-50">{photos.length + i + 1}</span>
             </div>
           ))}
         </div>
-        <div className="mt-6 mb-2 text-center text-white/90">
+        <div className="relative z-10 mt-6 mb-2 text-center text-white/90">
           <div className="font-bold text-lg">Title</div>
           <div className="text-xs italic">Subtitle</div>
         </div>
+        {/* Preset Animals */}
+        {presetSrcs[0] && <img src={presetSrcs[0]} className="absolute bottom-2 left-2 w-10 h-10 object-contain z-20 opacity-90" alt="" />}
+        {presetSrcs[1] && <img src={presetSrcs[1]} className="absolute bottom-2 right-2 w-10 h-10 object-contain z-20 opacity-90" alt="" />}
+        {presetSrcs[2] && <img src={presetSrcs[2]} className="absolute bottom-12 left-1/2 -translate-x-1/2 w-10 h-10 object-contain z-20 opacity-90" alt="" />}
       </div>
     )
   }
 
   if (layout === '4R-split') {
     return (
-      <div className="w-full aspect-[3/2] p-4 shadow-xl border border-border flex flex-col gap-3" style={{ backgroundColor: customColor }}>
-        <div className="flex gap-3 h-3/5">
-          <div className="w-2/3 h-full bg-black/20 relative overflow-hidden">
-            {photos[0] ? <img src={photos[0]} alt="pose" className="w-full h-full object-cover" /> : <div className="absolute inset-0 flex items-center justify-center font-bold opacity-50 border border-dashed border-black/30">1</div>}
+      <div className="relative w-full aspect-[3/2] p-4 shadow-xl border border-border flex flex-col gap-3 overflow-hidden">
+        {renderBackground()}
+        <div className="relative z-10 flex gap-3 h-3/5">
+          <div className="w-2/3 h-full bg-black/20 relative overflow-hidden backdrop-blur-sm rounded-lg shadow-inner">
+            {photos[0] ? (
+              <>
+                <img src={photos[0]} alt="pose" className="w-full h-full object-cover" />
+                <div className="absolute inset-0 bg-[radial-gradient(circle,transparent_50%,rgba(0,0,0,0.45)_120%)] pointer-events-none" />
+              </>
+            ) : <div className="absolute inset-0 flex items-center justify-center font-bold opacity-50 border border-dashed border-black/30">1</div>}
           </div>
-          <div className="w-1/3 flex flex-col justify-center items-center text-white/90 p-2 text-center">
-            <div className="font-bold text-xl">Title</div>
-            <div className="text-sm italic">Subtitle</div>
+          <div className="w-1/3 flex flex-col justify-center items-center text-white/90 p-2 text-center relative">
+            <div className="font-bold text-xl mb-1 z-30">Title</div>
+            <div className="text-sm italic z-30">Subtitle</div>
+            {presetSrcs[0] && <img src={presetSrcs[0]} className="absolute top-4 left-4 w-12 h-12 object-contain z-20 opacity-90" alt="" />}
+            {presetSrcs[1] && <img src={presetSrcs[1]} className="absolute top-4 right-4 w-12 h-12 object-contain z-20 opacity-90" alt="" />}
+            {presetSrcs[2] && <img src={presetSrcs[2]} className="absolute bottom-4 left-1/2 -translate-x-1/2 w-12 h-12 object-contain z-20 opacity-90" alt="" />}
           </div>
         </div>
-        <div className="flex gap-3 h-2/5">
+        <div className="relative z-10 flex gap-3 h-2/5">
           {[1, 2, 3].map((idx) => (
-            <div key={idx} className="flex-1 h-full bg-black/20 relative overflow-hidden">
-              {photos[idx] ? <img src={photos[idx]} alt="pose" className="w-full h-full object-cover" /> : <div className="absolute inset-0 flex items-center justify-center font-bold opacity-50 border border-dashed border-black/30">{idx + 1}</div>}
+            <div key={idx} className="flex-1 h-full bg-black/20 relative overflow-hidden backdrop-blur-sm rounded-lg shadow-inner">
+              {photos[idx] ? (
+                <>
+                  <img src={photos[idx]} alt="pose" className="w-full h-full object-cover" />
+                  <div className="absolute inset-0 bg-[radial-gradient(circle,transparent_50%,rgba(0,0,0,0.45)_120%)] pointer-events-none" />
+                </>
+              ) : <div className="absolute inset-0 flex items-center justify-center font-bold opacity-50 border border-dashed border-black/30">{idx + 1}</div>}
             </div>
           ))}
         </div>
@@ -89,17 +127,30 @@ function PreviewCanvas({ layout, photos, customColor, count }: { layout: LayoutT
 
   if (layout === '4R-grid') {
     return (
-      <div className="w-full aspect-[3/2] p-4 shadow-xl border border-border flex flex-col justify-between" style={{ backgroundColor: customColor }}>
-        <div className="grid grid-cols-2 gap-3 h-[80%]">
+      <div className="relative w-full aspect-[3/2] p-4 shadow-xl border border-border flex flex-col justify-between overflow-hidden">
+        {renderBackground()}
+        <div className="relative z-10 grid grid-cols-2 gap-3 h-[80%]">
           {[0, 1, 2, 3].map((idx) => (
-            <div key={idx} className="bg-black/20 relative overflow-hidden">
-              {photos[idx] ? <img src={photos[idx]} alt="pose" className="w-full h-full object-cover" /> : <div className="absolute inset-0 flex items-center justify-center font-bold opacity-50 border border-dashed border-black/30">{idx + 1}</div>}
+            <div key={idx} className="bg-black/20 relative overflow-hidden backdrop-blur-sm rounded-lg shadow-inner">
+              {photos[idx] ? (
+                <>
+                  <img src={photos[idx]} alt="pose" className="w-full h-full object-cover" />
+                  <div className="absolute inset-0 bg-[radial-gradient(circle,transparent_50%,rgba(0,0,0,0.45)_120%)] pointer-events-none" />
+                </>
+              ) : <div className="absolute inset-0 flex items-center justify-center font-bold opacity-50 border border-dashed border-black/30">{idx + 1}</div>}
             </div>
           ))}
         </div>
-        <div className="h-[15%] flex justify-between items-end px-4 text-white/90">
-          <div className="text-sm italic">Subtitle</div>
-          <div className="font-bold text-xl">Title</div>
+        <div className="relative z-10 h-[15%] flex justify-between items-end px-4 text-white/90">
+          <div className="text-sm italic relative z-30">
+            Subtitle
+            {presetSrcs[0] && <img src={presetSrcs[0]} className="absolute bottom-6 -left-2 w-10 h-10 object-contain z-20 opacity-90" alt="" />}
+          </div>
+          {presetSrcs[2] && <img src={presetSrcs[2]} className="absolute bottom-2 left-1/2 -translate-x-1/2 w-10 h-10 object-contain z-20 opacity-90" alt="" />}
+          <div className="font-bold text-xl relative z-30">
+            Title
+            {presetSrcs[1] && <img src={presetSrcs[1]} className="absolute bottom-8 -right-2 w-10 h-10 object-contain z-20 opacity-90" alt="" />}
+          </div>
         </div>
       </div>
     )
@@ -182,6 +233,25 @@ export function PhotoboothLayout({ layout, theme }: PhotoboothLayoutProps) {
       canvas.height = 1200
     }
 
+    // Calculate photo bounds based on layout
+    const pBounds: {x: number, y: number, w: number, h: number}[] = []
+    if (config.type.startsWith('strip')) {
+      const pW = 500, pH = 375, pad = 30
+      for(let i=0; i<config.count; i++) {
+        pBounds.push({ x: pad, y: pad + i * (pH + pad), w: pW, h: pH })
+      }
+    } else if (config.type === '4R-split') {
+      pBounds.push({ x: 80, y: 80, w: 900, h: 1040 }) // large
+      pBounds.push({ x: 1060, y: 80, w: 660, h: 320 }) // small 1
+      pBounds.push({ x: 1060, y: 440, w: 660, h: 320 }) // small 2
+      pBounds.push({ x: 1060, y: 800, w: 660, h: 320 }) // small 3
+    } else if (config.type === '4R-grid') {
+      pBounds.push({ x: 60, y: 60, w: 810, h: 420 })
+      pBounds.push({ x: 930, y: 60, w: 810, h: 420 })
+      pBounds.push({ x: 60, y: 540, w: 810, h: 420 })
+      pBounds.push({ x: 930, y: 540, w: 810, h: 420 })
+    }
+
     // Fill background color
     ctx.fillStyle = customColor
     ctx.fillRect(0, 0, canvas.width, canvas.height)
@@ -192,32 +262,35 @@ export function PhotoboothLayout({ layout, theme }: PhotoboothLayoutProps) {
         const img = new Image()
         img.crossOrigin = 'anonymous'
         img.onload = () => {
-          if (config.type.startsWith('strip')) {
-            const pW = 500, pH = 375, pad = 30
-            const y = pad + (idx * (pH + pad))
-            ctx.drawImage(img, pad, y, pW, pH)
-          } else if (config.type === '4R-split') {
-            const pad = 40
-            if (idx === 0) {
-              ctx.drawImage(img, pad, pad, 1000, 700)
-            } else {
-              const pW = 546, pH = 380
-              const xOffset = pad + ((idx - 1) * (pW + pad))
-              ctx.drawImage(img, xOffset, 700 + pad * 2, pW, pH)
-            }
-          } else if (config.type === '4R-grid') {
-            const pad = 40
-            const pW = 840, pH = 450
-            const col = idx % 2
-            const row = Math.floor(idx / 2)
-            const x = pad + col * (pW + pad)
-            const y = pad + row * (pH + pad)
-            ctx.drawImage(img, x, y, pW, pH)
+          const bound = pBounds[idx]
+          if (!bound) return
+          const { x: dX, y: dY, w: dWidth, h: dHeight } = bound
+
+          ctx.save()
+          ctx.beginPath()
+          if (ctx.roundRect) {
+            ctx.roundRect(dX, dY, dWidth, dHeight, 16)
+          } else {
+            ctx.rect(dX, dY, dWidth, dHeight)
           }
+          ctx.clip()
+
+          ctx.drawImage(img, 0, 0, img.width, img.height, dX, dY, dWidth, dHeight)
+
+          const gradient = ctx.createRadialGradient(
+            dX + dWidth/2, dY + dHeight/2, Math.min(dWidth, dHeight) * 0.35,
+            dX + dWidth/2, dY + dHeight/2, Math.max(dWidth, dHeight) * 0.75
+          )
+          gradient.addColorStop(0, 'rgba(0,0,0,0)')
+          gradient.addColorStop(1, 'rgba(0,0,0,0.45)')
+          ctx.fillStyle = gradient
+          ctx.fillRect(dX, dY, dWidth, dHeight)
+          
+          ctx.restore()
 
           loadedCount++
           if (loadedCount === photos.length) {
-            drawDoodlesLayer()
+            drawTextLayer()
           }
         }
         img.src = photo
@@ -225,100 +298,116 @@ export function PhotoboothLayout({ layout, theme }: PhotoboothLayoutProps) {
     }
 
     const drawDoodlesLayer = () => {
-      // Collect all doodles to render:
-      // - Custom-drawn doodles (max 3): Random placement across canvas
-      // - Preset animal doodles (up to 3): Placed on LEFT and RIGHT sides as background decorations
-      // - ClipArt pattern doodle (1): Overlay with random placements
       const customDoodles = doodleDataUrls.filter(Boolean)
       const hasPresetAnimals = presetDoodleSrcs.length > 0
       const hasClipartPattern = !!clipartDoodleSrc
 
-      // If no doodles, skip to text layer
       if (customDoodles.length === 0 && !hasPresetAnimals && !hasClipartPattern) {
-        drawTextLayer()
+        drawPhotos()
         return
       }
 
       let loadedCount = 0
       const totalDoodlesToLoad = customDoodles.length + (hasPresetAnimals ? presetDoodleSrcs.length : 0) + (hasClipartPattern ? 1 : 0)
 
-      // LOAD AND RENDER CUSTOM-DRAWN DOODLES (random placement across full canvas)
-      customDoodles.forEach((url) => {
-        const doodleImg = new Image()
-        doodleImg.crossOrigin = 'anonymous'
-        doodleImg.onload = () => {
-          ctx.globalAlpha = 0.7
-          // Stamp custom doodle multiple times with random positions
-          for (let i = 0; i < 5; i++) {
-            const x = Math.random() * (canvas.width - 200)
-            const y = Math.random() * (canvas.height - 200)
-            const scale = 0.8 + Math.random() * 0.4
-            ctx.drawImage(doodleImg, x, y, 250 * scale, 200 * scale)
-          }
-          loadedCount++
-          if (loadedCount === totalDoodlesToLoad) {
-            ctx.globalAlpha = 1.0
-            drawTextLayer()
-          }
-        }
-        doodleImg.src = url
-      })
-
-      // LOAD AND RENDER PRESET ANIMAL DOODLES (up to 3, placed on SIDES, not center)
-      if (hasPresetAnimals) {
-        presetDoodleSrcs.forEach((presetSrc) => {
-          const presetImg = new Image()
-          presetImg.crossOrigin = 'anonymous'
-          presetImg.onload = () => {
-            ctx.globalAlpha = 0.6
-            // Define safe center zone where photos are located
-            const sideWidth = 200
-            
-            // Place doodles ONLY on the LEFT and RIGHT sides, never in center
-            const placements = [
-              // Left side placements for first animal
-              { x: 0, y: Math.random() * (canvas.height - 150) },
-              { x: 10, y: Math.random() * (canvas.height - 150) + 50 },
-              // Right side placements for second animal
-              { x: canvas.width - sideWidth, y: Math.random() * (canvas.height - 150) },
-              { x: canvas.width - sideWidth + 20, y: Math.random() * (canvas.height - 150) + 50 },
-            ]
-
-            // Each animal gets 2-3 placements on the sides
-            const placementsToUse = placements.slice(0, Math.min(3, placements.length))
-            placementsToUse.forEach(({ x, y }) => {
-              const scale = 0.7 + Math.random() * 0.3
-              ctx.drawImage(presetImg, x, y, 250 * scale, 200 * scale)
-            })
-
+      if (customDoodles.length > 0) {
+        customDoodles.forEach((url) => {
+          const doodleImg = new Image()
+          doodleImg.crossOrigin = 'anonymous'
+          doodleImg.onload = () => {
+            ctx.globalAlpha = 0.9
+            for (let i = 0; i < 4; i++) {
+              if (pBounds.length === 0) break
+              const bound = pBounds[Math.floor(Math.random() * pBounds.length)]
+              const placement = Math.floor(Math.random() * 8)
+              const scale = 0.4 + Math.random() * 0.4
+              const dW = 200 * scale
+              const dH = 150 * scale
+              let x = bound.x
+              let y = bound.y
+              switch(placement) {
+                case 0: x -= dW*0.6; y -= dH*0.6; break
+                case 1: x += bound.w/2 - dW/2; y -= dH*0.7; break
+                case 2: x += bound.w - dW*0.4; y -= dH*0.6; break
+                case 3: x += bound.w - dW*0.3; y += bound.h/2 - dH/2; break
+                case 4: x += bound.w - dW*0.4; y += bound.h - dH*0.4; break
+                case 5: x += bound.w/2 - dW/2; y += bound.h - dH*0.3; break
+                case 6: x -= dW*0.6; y += bound.h - dH*0.4; break
+                case 7: x -= dW*0.7; y += bound.h/2 - dH/2; break
+              }
+              ctx.drawImage(doodleImg, x, y, dW, dH)
+            }
             loadedCount++
             if (loadedCount === totalDoodlesToLoad) {
               ctx.globalAlpha = 1.0
-              drawTextLayer()
+              drawPhotos()
+            }
+          }
+          doodleImg.src = url
+        })
+      }
+
+      if (hasPresetAnimals) {
+        presetDoodleSrcs.forEach((presetSrc, idx) => {
+          const presetImg = new Image()
+          presetImg.crossOrigin = 'anonymous'
+          presetImg.onload = () => {
+            ctx.globalAlpha = 0.9 
+            const isStrip = config.type.startsWith('strip')
+            const is4RSplit = config.type === '4R-split'
+            const is4RGrid = config.type === '4R-grid'
+            let x = 0, y = 0, size = 150
+            if (isStrip) {
+               size = 120
+               if (idx === 0) { x = 10; y = canvas.height - 160 } 
+               else if (idx === 1) { x = canvas.width - size - 10; y = canvas.height - 160 } 
+               else { x = canvas.width / 2 - (size/2); y = canvas.height - 230 }
+            } else if (is4RSplit) {
+               size = 200
+               if (idx === 0) { x = 1100; y = 200 } 
+               else if (idx === 1) { x = 1550; y = 200 } 
+               else { x = 1320; y = 600 }
+            } else if (is4RGrid) {
+               size = 180
+               if (idx === 0) { x = 40; y = canvas.height - size - 90 } 
+               else if (idx === 1) { x = canvas.width - size - 40; y = canvas.height - size - 90 } 
+               else { x = canvas.width / 2 - (size/2); y = canvas.height - size - 50 }
+            }
+            ctx.drawImage(presetImg, x, y, size, size)
+            loadedCount++
+            if (loadedCount === totalDoodlesToLoad) {
+              ctx.globalAlpha = 1.0
+              drawPhotos()
             }
           }
           presetImg.src = presetSrc
         })
       }
 
-      // LOAD AND RENDER CLIPART PATTERN DOODLE (overlay on top, random placements)
       if (hasClipartPattern) {
         const clipartImg = new Image()
         clipartImg.crossOrigin = 'anonymous'
         clipartImg.onload = () => {
-          ctx.globalAlpha = 0.5
-          // Pattern overlay: distribute across full canvas with random rotations/placements
-          for (let i = 0; i < 3; i++) {
-            const x = Math.random() * (canvas.width - 250)
-            const y = Math.random() * (canvas.height - 250)
-            const scale = 0.6 + Math.random() * 0.4
-            ctx.drawImage(clipartImg, x, y, 300 * scale, 250 * scale)
+          ctx.globalAlpha = 0.3
+          
+          // Pattern overlay: tile across the entire canvas as a background
+          const patternCanvas = document.createElement('canvas')
+          patternCanvas.width = 300
+          patternCanvas.height = 300
+          const pCtx = patternCanvas.getContext('2d')
+          if (pCtx) {
+            pCtx.drawImage(clipartImg, 0, 0, 300, 300)
+            const pattern = ctx.createPattern(patternCanvas, 'repeat')
+            if (pattern) {
+              ctx.fillStyle = pattern
+              ctx.fillRect(0, 0, canvas.width, canvas.height)
+            }
           }
 
           loadedCount++
           if (loadedCount === totalDoodlesToLoad) {
             ctx.globalAlpha = 1.0
-            drawTextLayer()
+            drawPhotos()
           }
         }
         clipartImg.src = clipartDoodleSrc
@@ -379,7 +468,7 @@ export function PhotoboothLayout({ layout, theme }: PhotoboothLayoutProps) {
       }, 100)
     }
 
-    drawPhotos()
+    drawDoodlesLayer()
   }
 
   return (
@@ -650,7 +739,14 @@ export function PhotoboothLayout({ layout, theme }: PhotoboothLayoutProps) {
             </h3>
 
             <div className="mb-8 flex justify-center bg-gradient-to-b from-gray-900/50 to-gray-950/50 rounded-2xl p-6 overflow-hidden border border-white/5">
-              <PreviewCanvas layout={config.type} photos={photos} customColor={customColor} count={config.count} />
+              <PreviewCanvas 
+                layout={config.type} 
+                photos={photos} 
+                customColor={customColor} 
+                count={config.count}
+                patternSrc={clipartDoodleSrc}
+                presetSrcs={presetDoodleSrcs}
+              />
             </div>
 
             <div className="space-y-3">

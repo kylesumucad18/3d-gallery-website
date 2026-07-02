@@ -53,10 +53,28 @@ export function ImageColorPicker({ color, onChange }: ImageColorPickerProps) {
   const wheelRef = useRef<HTMLDivElement>(null)
   const [hsl, setHsl] = useState(() => hexToHsl(color))
   const [isDragging, setIsDragging] = useState(false)
+  const [colorMode, setColorMode] = useState<'RGB' | 'HSL'>('RGB')
+
+  const [hexInput, setHexInput] = useState(color)
+  const [rgbInput, setRgbInput] = useState(() => {
+    const r = hexToRgbObj(color)
+    return { r: String(r.r), g: String(r.g), b: String(r.b) }
+  })
+  const [hslInput, setHslInput] = useState(() => {
+    const h = hexToHsl(color)
+    return { h: String(Math.round(h.h)), s: String(Math.round(h.s)), l: String(Math.round(h.l)) }
+  })
 
   useEffect(() => {
     if (!isDragging) {
-      setHsl(hexToHsl(color))
+      const newHsl = hexToHsl(color)
+      setHsl(newHsl)
+      if (document.activeElement?.tagName !== 'INPUT') {
+        setHexInput(color)
+        const r = hexToRgbObj(color)
+        setRgbInput({ r: String(r.r), g: String(r.g), b: String(r.b) })
+        setHslInput({ h: String(Math.round(newHsl.h)), s: String(Math.round(newHsl.s)), l: String(Math.round(newHsl.l)) })
+      }
     }
   }, [color, isDragging])
 
@@ -115,18 +133,42 @@ export function ImageColorPicker({ color, onChange }: ImageColorPickerProps) {
   }
 
   const handleRgbChange = (component: 'r'|'g'|'b', val: string) => {
+    setRgbInput(prev => ({ ...prev, [component]: val }))
+    if (val === '') return
     let num = parseInt(val)
-    if (isNaN(num)) num = 0
+    if (isNaN(num)) return
     num = Math.max(0, Math.min(255, num))
-    const rgb = hexToRgbObj(color)
-    const nextRgb = { ...rgb, [component]: num }
-    const hex = `#${nextRgb.r.toString(16).padStart(2,'0')}${nextRgb.g.toString(16).padStart(2,'0')}${nextRgb.b.toString(16).padStart(2,'0')}`.toUpperCase()
-    onChange(hex)
+    setRgbInput(prev => {
+      const next = { ...prev, [component]: String(num) }
+      const hex = `#${parseInt(next.r||'0').toString(16).padStart(2,'0')}${parseInt(next.g||'0').toString(16).padStart(2,'0')}${parseInt(next.b||'0').toString(16).padStart(2,'0')}`.toUpperCase()
+      onChange(hex)
+      return next
+    })
   }
 
-  const rgb = hexToRgbObj(color)
+  const handleHslInputChange = (component: 'h'|'s'|'l', val: string) => {
+    setHslInput(prev => ({ ...prev, [component]: val }))
+    if (val === '') return
+    let num = parseFloat(val)
+    if (isNaN(num)) return
+    if (component === 'h') num = Math.max(0, Math.min(360, num))
+    else num = Math.max(0, Math.min(100, num))
+    setHslInput(prev => {
+      const next = { ...prev, [component]: String(num) }
+      onChange(hslToHex(parseFloat(next.h||'0'), parseFloat(next.s||'0'), parseFloat(next.l||'0')))
+      return next
+    })
+  }
+
+  const handleHexChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value
+    setHexInput(val)
+    if (/^#[0-9A-Fa-f]{6}$/.test(val)) {
+      onChange(val.toUpperCase())
+    }
+  }
+
   const baseColorHex = hslToHex(hsl.h, hsl.s, 50) 
-  
   const angleRad = (hsl.h - 90) * (Math.PI / 180)
   const left = 50 + Math.cos(angleRad) * (hsl.s / 100) * 50
   const top = 50 + Math.sin(angleRad) * (hsl.s / 100) * 50
@@ -194,38 +236,58 @@ export function ImageColorPicker({ color, onChange }: ImageColorPickerProps) {
       <div className="w-full grid grid-cols-2 gap-4 text-sm text-gray-700 px-2">
         <div className="space-y-3">
           <div className="relative">
-            <select className="w-full appearance-none bg-white border border-gray-200 rounded-md py-2 px-3 pr-8 focus:outline-none focus:ring-1 focus:ring-gray-300">
-              <option>RGB</option>
+            <select 
+              value={colorMode} 
+              onChange={(e) => setColorMode(e.target.value as 'RGB' | 'HSL')}
+              className="w-full appearance-none bg-white border border-gray-200 rounded-md py-2 px-3 pr-8 focus:outline-none focus:ring-1 focus:ring-gray-300 cursor-pointer"
+            >
+              <option value="RGB">RGB</option>
+              <option value="HSL">HSL</option>
             </select>
             <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500">
               <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
             </div>
           </div>
           
-          <div className="flex items-center gap-3">
-            <input type="number" value={rgb.r} onChange={e => handleRgbChange('r', e.target.value)} className="w-16 bg-white border border-gray-200 rounded-md py-1.5 px-2 focus:outline-none focus:ring-1 focus:ring-gray-300" />
-            <span>Red</span>
-          </div>
-          <div className="flex items-center gap-3">
-            <input type="number" value={rgb.g} onChange={e => handleRgbChange('g', e.target.value)} className="w-16 bg-white border border-gray-200 rounded-md py-1.5 px-2 focus:outline-none focus:ring-1 focus:ring-gray-300" />
-            <span>Green</span>
-          </div>
-          <div className="flex items-center gap-3">
-            <input type="number" value={rgb.b} onChange={e => handleRgbChange('b', e.target.value)} className="w-16 bg-white border border-gray-200 rounded-md py-1.5 px-2 focus:outline-none focus:ring-1 focus:ring-gray-300" />
-            <span>Blue</span>
-          </div>
+          {colorMode === 'RGB' ? (
+            <>
+              <div className="flex items-center gap-3">
+                <input type="text" value={rgbInput.r} onChange={e => handleRgbChange('r', e.target.value)} className="w-16 bg-white border border-gray-200 rounded-md py-1.5 px-2 focus:outline-none focus:ring-1 focus:ring-gray-300 text-center" />
+                <span>Red</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <input type="text" value={rgbInput.g} onChange={e => handleRgbChange('g', e.target.value)} className="w-16 bg-white border border-gray-200 rounded-md py-1.5 px-2 focus:outline-none focus:ring-1 focus:ring-gray-300 text-center" />
+                <span>Green</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <input type="text" value={rgbInput.b} onChange={e => handleRgbChange('b', e.target.value)} className="w-16 bg-white border border-gray-200 rounded-md py-1.5 px-2 focus:outline-none focus:ring-1 focus:ring-gray-300 text-center" />
+                <span>Blue</span>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="flex items-center gap-3">
+                <input type="text" value={hslInput.h} onChange={e => handleHslInputChange('h', e.target.value)} className="w-16 bg-white border border-gray-200 rounded-md py-1.5 px-2 focus:outline-none focus:ring-1 focus:ring-gray-300 text-center" />
+                <span>Hue</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <input type="text" value={hslInput.s} onChange={e => handleHslInputChange('s', e.target.value)} className="w-16 bg-white border border-gray-200 rounded-md py-1.5 px-2 focus:outline-none focus:ring-1 focus:ring-gray-300 text-center" />
+                <span>Sat</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <input type="text" value={hslInput.l} onChange={e => handleHslInputChange('l', e.target.value)} className="w-16 bg-white border border-gray-200 rounded-md py-1.5 px-2 focus:outline-none focus:ring-1 focus:ring-gray-300 text-center" />
+                <span>Light</span>
+              </div>
+            </>
+          )}
         </div>
 
         <div className="flex flex-col items-end">
           <input 
             type="text" 
-            value={color} 
-            onChange={e => {
-              const val = e.target.value
-              if (/^#[0-9A-Fa-f]{0,6}$/.test(val)) {
-                if (val.length === 7) onChange(val.toUpperCase())
-              }
-            }}
+            value={hexInput} 
+            onChange={handleHexChange}
+            onBlur={() => setHexInput(color)}
             className="w-full bg-white border border-gray-200 rounded-md py-2 px-3 text-center font-mono focus:outline-none focus:ring-1 focus:ring-gray-300" 
           />
         </div>
