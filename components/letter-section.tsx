@@ -9,7 +9,7 @@ export function LetterSection() {
   const [isVerified, setIsVerified] = useState(false)
   const [showModal, setShowModal] = useState(false)
   const [showCarousel, setShowCarousel] = useState(false)
-  const [step, setStep] = useState<'question' | 'why4' | 'messenger'>('question')
+  const [step, setStep] = useState<'question' | 'success' | 'messenger'>('question')
   const [input, setInput] = useState('')
   const [error, setError] = useState('')
 
@@ -22,17 +22,17 @@ export function LetterSection() {
     e.preventDefault()
     setError('')
     
-    const ans = input.trim()
-    if (['1', '2', '3', '5', '6'].includes(ans)) {
-      setError('Wrong Answer, try again.')
-      setInput('')
-    } else if (ans === '4') {
-      setStep('why4')
+    const ans = input.trim().toLowerCase()
+    const validAnswers = ['kitang duha', 'kita', 'me', 'you', 'us', 'rica', 'kyle', 'joseph', 'joseph kyle', 'rica marie']
+    
+    if (validAnswers.includes(ans)) {
+      setStep('success')
       setTimeout(() => {
         setStep('messenger')
       }, 2500)
     } else {
-      setError('Please enter a valid number (e.g. 1, 2, 3...)')
+      setError('Wrong Answer, try again.')
+      setInput('')
     }
   }
 
@@ -163,14 +163,14 @@ export function LetterSection() {
                   >
                     <h2 className="text-2xl font-bold text-foreground mb-6">Verification</h2>
                     <p className="text-lg text-foreground mb-6 leading-relaxed">
-                      How many times have I given you flowers?
+                      Kinsay walay ligo?
                     </p>
                     <form onSubmit={handleSubmit} className="space-y-4">
                       <input
                         type="text"
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
-                        placeholder="Enter a number..."
+                        placeholder="Enter your answer..."
                         className="w-full px-5 py-4 bg-background border border-border rounded-xl text-foreground text-lg placeholder-muted-foreground focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
                         autoFocus
                       />
@@ -194,7 +194,7 @@ export function LetterSection() {
                   </motion.div>
                 )}
 
-                {step === 'why4' && (
+                {step === 'success' && (
                   <motion.div
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
@@ -204,7 +204,7 @@ export function LetterSection() {
                       animate={{ rotate: [-5, 5, -5, 5, 0] }}
                       transition={{ duration: 0.5, delay: 0.2 }}
                     >
-                      <h2 className="text-4xl font-bold text-primary mb-4">Why is it 4? 🤔</h2>
+                      <h2 className="text-4xl font-bold text-primary mb-4">Sakto! 😂</h2>
                     </motion.div>
                   </motion.div>
                 )}
