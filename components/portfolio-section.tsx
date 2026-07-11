@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react'
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { VerificationModal } from './verification-modal'
+import { VerificationModal, getStorageKey } from './verification-modal'
 import { PhotoCarouselModal } from './photo-carousel-modal'
 import dynamicPhotos from '../public/photos.json'
 
@@ -71,7 +71,7 @@ export function PortfolioSection() {
   const nextMonth = currentIndex !== -1 && currentIndex < monthCards.length - 1 ? monthCards[currentIndex + 1] : null
 
   useEffect(() => {
-    const verified = localStorage.getItem('verified_portfolio') === 'true'
+    const verified = localStorage.getItem(getStorageKey('portfolio')) === 'true'
     setIsVerified(verified)
     if (!verified) {
       setShowModal(true)
@@ -201,7 +201,7 @@ export function PortfolioSection() {
         <VerificationModal
           isOpen={showModal}
           question="How many vowels are there in my name?"
-          correctAnswers={['9', 'nine']}
+          correctAnswers={['19581e27de7ced00ff1ce50b2047e7a567c76b1cbaebabe5ef03f7c3017bb5b7', 'edcd8e701a2df0cd66a39bae6aa156cf16fe2b9653ef65f7d31742e2352421e4']}
           sectionId="portfolio"
           onSuccess={handleVerificationSuccess}
           onClose={() => setShowModal(false)}

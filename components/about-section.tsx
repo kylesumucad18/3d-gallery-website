@@ -3,14 +3,14 @@
 import { motion } from 'framer-motion'
 import { Heart, Lightbulb, Zap, Target, Sparkles, Eye } from 'lucide-react'
 import { useState, useEffect } from 'react'
-import { VerificationModal } from './verification-modal'
+import { VerificationModal, getStorageKey } from './verification-modal'
 
 export function AboutSection() {
   const [isVerified, setIsVerified] = useState(false)
   const [showModal, setShowModal] = useState(false)
 
   useEffect(() => {
-    const verified = localStorage.getItem('verified_about') === 'true'
+    const verified = localStorage.getItem(getStorageKey('about')) === 'true'
     setIsVerified(verified)
     if (!verified) {
       setShowModal(true)
@@ -117,7 +117,7 @@ export function AboutSection() {
         <VerificationModal
           isOpen={showModal}
           question="What is the name of my dog?"
-          correctAnswers={['Cooper', 'kuku', 'cooperlaling']}
+          correctAnswers={['7781113a99f177280ad3e89bcf631f03acb8fa8e626082dd9158eeee0bdd5674', '81a50432934af4642227a1561bf0dc3aba0f4b82f904c11e12e82f61e034f2da', '488290696c9e1cd9d92cb34f4bdc4a30a58bce97487ae8ac174df3f665e3c8d9']}
           sectionId="about"
           onSuccess={handleVerificationSuccess}
           onClose={() => setShowModal(false)}

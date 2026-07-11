@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Sparkles, Gift, ChevronLeft, ChevronRight, X } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
-import { VerificationModal } from './verification-modal'
+import { VerificationModal, getStorageKey } from './verification-modal'
 import dynamicPhotos from '../public/photos.json'
 
 export function BirthdaySection() {
@@ -45,7 +45,7 @@ export function BirthdaySection() {
       setCarouselImages(selected)
     }
 
-    const verified = localStorage.getItem('verified_birthday') === 'true'
+    const verified = localStorage.getItem(getStorageKey('birthday')) === 'true'
     setIsVerified(verified)
     if (!verified) {
       setShowModal(true)
@@ -207,7 +207,7 @@ export function BirthdaySection() {
         <VerificationModal
           isOpen={showModal}
           question="What comes after laptop?"
-          correctAnswers={['laplap', 'lap2']}
+          correctAnswers={['e4ff0de2d0134969b4f0225096bb2e93b1c9e81eb0a8c307884cc9b1e8991ab1', '0d5582625249de72ed32627250bd05e68e6efe6cc38aa5d8bd39e0729f4aca40']}
           sectionId="birthday"
           onSuccess={handleVerificationSuccess}
           onClose={() => setShowModal(false)}

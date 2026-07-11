@@ -4,6 +4,13 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useEffect } from 'react'
 import { X } from 'lucide-react'
 
+export const getStorageKey = (sectionId: string) => {
+  if (typeof window !== 'undefined') {
+    return `_sec_v_${btoa(sectionId).replace(/=/g, '')}`
+  }
+  return `_sec_v_${sectionId}`
+}
+
 interface VerificationModalProps {
   isOpen: boolean
   question: string
@@ -27,34 +34,44 @@ export function VerificationModal({
 
   useEffect(() => {
     // Check if this section was already verified in localStorage
-    const verified = localStorage.getItem(`verified_${sectionId}`)
+    const verified = localStorage.getItem(getStorageKey(sectionId))
     if (verified === 'true') {
       onSuccess()
     }
   }, [sectionId, onSuccess])
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
     setIsLoading(true)
 
-    // Simulate slight delay for UX
-    setTimeout(() => {
+    try {
       const normalizedInput = input.toLowerCase().trim()
-      const isCorrect = correctAnswers.some(
-        (answer) => answer.toLowerCase().trim() === normalizedInput
-      )
+      
+      const encoder = new TextEncoder()
+      const data = encoder.encode(normalizedInput)
+      const hashBuffer = await crypto.subtle.digest('SHA-256', data)
+      const hashArray = Array.from(new Uint8Array(hashBuffer))
+      const hashedInput = hashArray.map(b => b.toString(16).padStart(2, '0')).join('')
 
-      if (isCorrect) {
-        localStorage.setItem(`verified_${sectionId}`, 'true')
-        onSuccess()
-        setInput('')
-      } else {
-        setError('Incorrect answer. Please try again.')
-        setInput('')
-      }
+      const isCorrect = correctAnswers.includes(hashedInput)
+
+      setTimeout(() => {
+        if (isCorrect) {
+          localStorage.setItem(getStorageKey(sectionId), 'true')
+          onSuccess()
+          setInput('')
+        } else {
+          setError('Incorrect answer. Please try again.')
+          setInput('')
+        }
+        setIsLoading(false)
+      }, 300)
+    } catch (err) {
+      console.error(err)
+      setError('An error occurred.')
       setIsLoading(false)
-    }, 300)
+    }
   }
 
   return (
