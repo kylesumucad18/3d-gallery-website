@@ -203,7 +203,7 @@ export function PhotoboothLayout({ layout, theme }: PhotoboothLayoutProps) {
         .catch((err) => {
           console.error('Error accessing camera:', err)
           alert('Camera access denied. Please allow camera permissions.')
-          setCameraActive(false)
+          setCurrentStep(1)
         })
     }
 
@@ -353,7 +353,7 @@ export function PhotoboothLayout({ layout, theme }: PhotoboothLayoutProps) {
               drawPhotos()
             }
           }
-          doodleImg.src = url
+          if (url) doodleImg.src = url
         })
       }
 
@@ -808,7 +808,7 @@ export function PhotoboothLayout({ layout, theme }: PhotoboothLayoutProps) {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => {
-                    setCameraActive(false)
+                    setCurrentStep(1)
                     setPhotos([])
                   }}
                   className="w-12 h-12 bg-black/60 hover:bg-red-500/80 text-white rounded-full flex items-center justify-center transition-colors backdrop-blur-md border border-white/20 hover:border-red-500"

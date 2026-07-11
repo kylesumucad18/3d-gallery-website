@@ -45,8 +45,8 @@ function ThemeSwitcherInner() {
           }`}
           style={{
             backgroundColor: theme === themeKey ? bg : 'transparent',
-            ringColor: theme === themeKey ? bg : 'transparent',
-          }}
+            '--tw-ring-color': theme === themeKey ? bg : 'transparent',
+          } as any}
           title={description}
         >
           {label}

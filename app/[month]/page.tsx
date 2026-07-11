@@ -44,8 +44,6 @@ export default function MonthCarouselPage({ params }: { params: Promise<{ month:
         title={`${monthName} Memories`}
         photos={photos}
         monthName={monthName}
-        prevMonthPath={prevMonth ? `/${prevMonth}` : null}
-        nextMonthPath={nextMonth ? `/${nextMonth}` : null}
         prevMonthName={prevMonthName}
         nextMonthName={nextMonthName}
       />

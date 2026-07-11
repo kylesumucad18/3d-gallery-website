@@ -18,42 +18,42 @@ const monthCards = [
   {
     id: 1,
     title: 'January',
-    description: 'Memories from the start',
+    description: 'pit senyor rica marie!',
     image: '/portfolio-1.png',
     color: 'from-amber-600 to-orange-600',
   },
   {
     id: 2,
     title: 'February',
-    description: 'Love in every frame',
+    description: 'ilocos empanada ano tara? first bidyokol',
     image: '/portfolio-2.png',
     color: 'from-rose-600 to-pink-600',
   },
   {
     id: 3,
     title: 'March',
-    description: 'New beginnings captured',
+    description: 'walang pics togeder w siquijor girly',
     image: '/portfolio-3.png',
     color: 'from-cyan-600 to-blue-600',
   },
   {
     id: 4,
     title: 'April',
-    description: 'Springtime joys',
+    description: 'ih nasa ubec na si medtek koh ^^',
     image: '/portfolio-4.png',
     color: 'from-green-600 to-emerald-600',
   },
   {
     id: 5,
     title: 'May',
-    description: 'Warmth and smiles',
+    description: 'kanta, flowers, holding hands hala sha..',
     image: '/may/1.png',
     color: 'from-violet-600 to-purple-600',
   },
   {
     id: 6,
     title: 'June',
-    description: 'Summer adventures',
+    description: 'kaons, pinning, simala w the sleepybaby',
     image: '/june/1.png',
     color: 'from-yellow-600 to-amber-600',
   },
@@ -211,7 +211,7 @@ export function PortfolioSection() {
           isOpen={!!expandedMonth}
           onClose={() => setExpandedMonth(null)}
           title={expandedMonth === 'Recent' ? 'Recent pictures together' : (expandedMonth ? monthCards.find(m => m.title === expandedMonth)?.description : '')}
-          photos={expandedMonth ? (dynamicPhotos[expandedMonth] || []) : undefined}
+          photos={expandedMonth ? (dynamicPhotos[expandedMonth as keyof typeof dynamicPhotos] || []) : undefined}
           monthName={expandedMonth || undefined}
           prevMonthName={expandedMonth === 'Recent' ? null : (prevMonth?.title || null)}
           nextMonthName={expandedMonth === 'Recent' ? null : (nextMonth?.title || null)}
