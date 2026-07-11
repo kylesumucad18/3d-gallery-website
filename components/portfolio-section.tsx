@@ -64,6 +64,7 @@ export function PortfolioSection() {
   const [isVerified, setIsVerified] = useState(false)
   const [showModal, setShowModal] = useState(false)
   const [expandedMonth, setExpandedMonth] = useState<string | null>(null)
+  const [randomImages, setRandomImages] = useState<Record<string, string>>({})
 
   const currentIndex = expandedMonth ? monthCards.findIndex(m => m.title === expandedMonth) : -1
   const prevMonth = currentIndex > 0 ? monthCards[currentIndex - 1] : null
@@ -75,6 +76,16 @@ export function PortfolioSection() {
     if (!verified) {
       setShowModal(true)
     }
+
+    const newRandomImages: Record<string, string> = {}
+    monthCards.forEach(card => {
+      const monthPhotos = dynamicPhotos[card.title as keyof typeof dynamicPhotos]
+      if (monthPhotos && monthPhotos.length > 0) {
+        const randomIndex = Math.floor(Math.random() * monthPhotos.length)
+        newRandomImages[card.title] = monthPhotos[randomIndex].src
+      }
+    })
+    setRandomImages(newRandomImages)
   }, [])
 
   const handleVerificationSuccess = () => {
@@ -132,7 +143,7 @@ export function PortfolioSection() {
                 {/* Image Background */}
                 <div className="absolute inset-0 overflow-hidden">
                   <Image
-                    src={item.image}
+                    src={randomImages[item.title] || item.image}
                     alt={item.title}
                     fill
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"

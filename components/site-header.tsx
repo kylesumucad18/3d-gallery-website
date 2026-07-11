@@ -63,7 +63,7 @@ export function SiteHeader() {
             ))}
           </ul>
           <div className="h-6 w-px bg-border hidden lg:block" />
-          <ThemeSwitcher />
+          {/* <ThemeSwitcher /> */}
         </nav>
 
         {/* Mobile Menu Toggle */}
@@ -99,7 +99,7 @@ export function SiteHeader() {
                 ))}
               </ul>
               <div className="pt-4 border-t border-border flex justify-center">
-                <ThemeSwitcher />
+                {/* <ThemeSwitcher /> */}
               </div>
             </div>
           </motion.div>

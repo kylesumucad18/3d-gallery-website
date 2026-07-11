@@ -7,9 +7,12 @@ import { useState, useRef, useEffect } from 'react'
 
 interface FavoriteCard {
   id: number
+  folderId: number
   title: string
   image: string
   description: string
+  buttonText: string
+  audioFile: string
 }
 
 export function FavoritesSection() {
@@ -38,25 +41,34 @@ export function FavoritesSection() {
   const favorites: FavoriteCard[] = [
     {
       id: 1,
-      title: 'Laughter and Joy',
-      image: '/portfolio-1.png',
-      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+      folderId: 2,
+      title: 'Pinning and Meeting your Parents',
+      image: '/favmoments/fave2.jpg',
+      description: 'hahahahha to be honest, this was my first time meeting the parents of someone im dating, i hope theyll like me for you :(( ',
+      buttonText: 'P! Mine',
+      audioFile: 'Taylor Swift - Mine (Lyrics).mp3',
     },
     {
       id: 2,
-      title: 'Precious Moments',
-      image: '/portfolio-2.png',
-      description: 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+      folderId: 1,
+      title: 'Crying like a Kid',
+      image: '/favmoments/fave1.jpg',
+      description: 'its my first time to cry infront of someone im dating too :)) , u got me feeling like a kid haaa.. ',
+      buttonText: 'P! EOA',
+      audioFile: 'end of august - noah kahan  piano instrumental, intro loop.mp3',
     },
     {
       id: 3,
-      title: 'Beautiful Smiles',
-      image: '/portfolio-3.png',
-      description: 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.',
+      folderId: 3,
+      title: 'Meeting my Fam and CK Opening Day!',
+      image: '/favmoments/fave3.jpg',
+      description: 'first time meeting your family with a 3 hour sleep, thanks baby :)) ',
+      buttonText: 'P! Someday',
+      audioFile: 'Someday.mp3',
     },
   ]
 
-  const toggleMusic = (id: number) => {
+  const toggleMusic = (id: number, audioFile: string) => {
     if (playingId === id) {
       if (audioRef.current) {
         audioRef.current.pause()
@@ -66,12 +78,13 @@ export function FavoritesSection() {
       if (audioRef.current) {
         audioRef.current.pause()
       }
-      const newAudio = new Audio(`/music-${id}.mp3`)
+      const newAudio = new Audio(`/music/${audioFile}`)
       audioRef.current = newAudio
       newAudio.play().catch(e => {
         console.log("Audio file not found or couldn't play:", e)
       })
       setPlayingId(id)
+      setExpandedId(id) // Automatically open the Favorite Card
 
       newAudio.onended = () => {
         setPlayingId(null)
@@ -125,14 +138,14 @@ export function FavoritesSection() {
 
                   <div className="flex gap-3">
                     <button
-                      onClick={() => toggleMusic(favorite.id)}
+                      onClick={() => toggleMusic(favorite.id, favorite.audioFile)}
                       className={`flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition-all ${playingId === favorite.id
                           ? 'bg-red-500 text-white'
                           : 'bg-primary text-primary-foreground hover:bg-primary/90'
                         }`}
                     >
                       <Music size={16} />
-                      {playingId === favorite.id ? 'Stop Music' : 'Start Music'}
+                      {playingId === favorite.id ? 'Stop Music' : favorite.buttonText}
                     </button>
                     <button
                       onClick={() => setExpandedId(favorite.id)}
@@ -216,7 +229,7 @@ export function FavoritesSection() {
                   >
                     <div className="relative w-full md:w-[60%] h-80 md:h-full min-h-[400px]">
                       <Image
-                        src={selectedPhotoIndex === 0 ? favorite.image : `/favorites/${favorite.id}/${selectedPhotoIndex + 1}.png`}
+                        src={selectedPhotoIndex === 0 ? favorite.image : `/favmoments/fave${favorite.folderId}/${selectedPhotoIndex}.jpg`}
                         alt={favorite.title}
                         fill
                         className="object-cover"
@@ -233,10 +246,10 @@ export function FavoritesSection() {
                       <div className="grid grid-cols-5 gap-2 mb-8">
                         {[
                           favorite.image, // Thumbnail 1 (Cover)
-                          `/favorites/${favorite.id}/2.png`,
-                          `/favorites/${favorite.id}/3.png`,
-                          `/favorites/${favorite.id}/4.png`,
-                          `/favorites/${favorite.id}/5.png`
+                          `/favmoments/fave${favorite.folderId}/1.jpg`,
+                          `/favmoments/fave${favorite.folderId}/2.jpg`,
+                          `/favmoments/fave${favorite.folderId}/3.jpg`,
+                          `/favmoments/fave${favorite.folderId}/4.jpg`
                         ].map((src, idx) => (
                           <button
                             key={idx}
@@ -253,14 +266,14 @@ export function FavoritesSection() {
 
                       <div className="flex flex-col gap-3 mt-auto">
                         <button
-                          onClick={() => toggleMusic(favorite.id)}
+                          onClick={() => toggleMusic(favorite.id, favorite.audioFile)}
                           className={`flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all ${playingId === favorite.id
                               ? 'bg-red-500 text-white shadow-lg shadow-red-500/20'
                               : 'bg-primary text-primary-foreground hover:bg-primary/90'
                             }`}
                         >
                           <Music size={18} />
-                          {playingId === favorite.id ? 'Stop Music' : 'Start Music'}
+                          {playingId === favorite.id ? 'Stop Music' : favorite.buttonText}
                         </button>
                         <button
                           onClick={() => setExpandedId(null)}

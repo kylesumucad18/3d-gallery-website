@@ -92,17 +92,23 @@ export function LetterSection() {
             {/* The Letter Content */}
             <div className="prose prose-invert max-w-none mb-12">
               <p className="text-2xl text-foreground leading-relaxed font-serif mb-6 italic">
-                Dear Rica Marie,
+                Dear sleepymedtekbabyyykoo,
               </p>
               <p className="text-lg text-muted-foreground leading-relaxed mb-6 font-serif">
-                Happy Birthday! As you read this, I hope you know how much you mean to me. Every moment we share is a treasure, and I am so grateful for the light and joy you bring into my life.
+                hi baby, I hope you liked my website that I made for you :)) pero bitaw to be honest I started this last week and to be specific its July 2 huhu pero i was too confident i could finish it in a day so here i am writing this letter on 10:35PM on July 11 HAHAHAHAHAHHAHAHA that&apos;s why i was so busy and sitting all day just to finish what i have created for you, and i hope you like it, btw thanks for also answering the questions hehehe thanks God kahibaw ka charot, im writing this in advance bitaw so idk yet pero i hope u do :))
               </p>
               <p className="text-lg text-muted-foreground leading-relaxed mb-6 font-serif">
-                May this year bring you all the happiness, success, and beautiful surprises you deserve. Keep shining and being the wonderful person you are. 
+                first of all, i wanna thank you for staying with me even if im hard to understand and too unstable most of the times, thank you for being so understanding and open to my feelings and thoughts. thank you for leaning towards me when you&apos;re having a hard time, thank you for sharing your thoughts and ideas about something, thank you for being the crying shoulder that i could cry on tapos pinamove saibang location (chariz lang b loveyou), thank you for holding on to me when things aren&apos;t going your way, throughout the 6 months of us talking again (from jhs pa yan sha), i wanna thank you for being the genuine and loving person that you are. thank you for being you with me baby :(( . i love you :^^ . 
+              </p>
+              <p className="text-lg text-muted-foreground leading-relaxed mb-6 font-serif">
+                iloveyou on all words, all actions, all ideas and all ways that i have in mind Rica Marie :&lt; . i am not good on all of them but i promise to make you feel that i love you all of you *kanta pabasa* cz all of me loves all u, love ur piercings and ur imperfections *okay wala na sa tono* despite your downs and insecurities in life, *kanta* i will love you till they take my heart awayyyyy, believeeee im here to stayyy, i will love youuu till they take my heart away *okay na*. pero i promise bbb, im here to stay. i love you baby! sana ma appreaciate mo e2ng ginawa q0h para saU :&gt;&gt; labvyu eksdi ka sakin!
+              </p>
+              <p className="text-lg text-muted-foreground leading-relaxed mb-6 font-serif italic">
+                ps. di nalang nako itaas baby basin kapoyon kag basa basta i love you mwamwamwachuchu ka sakin :^^ this day!!! magshave ko! raaaaawrr pero wala lang tay room so awts2
               </p>
               <p className="text-xl text-foreground leading-relaxed font-serif mt-12 italic">
-                With all my love,<br/>
-                <span className="text-primary mt-2 block not-italic font-bold">Your Little Food Critic</span>
+                from your badlungon baby,<br/>
+                <span className="text-primary mt-2 block not-italic font-bold">baby kyle way ligo xD HAHAHAHAHHA</span>
               </p>
             </div>
             

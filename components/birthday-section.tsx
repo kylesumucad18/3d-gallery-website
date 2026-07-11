@@ -5,6 +5,7 @@ import { Sparkles, Gift, ChevronLeft, ChevronRight, X } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { VerificationModal } from './verification-modal'
+import dynamicPhotos from '../public/photos.json'
 
 export function BirthdaySection() {
   const [isVerified, setIsVerified] = useState(false)
@@ -12,6 +13,11 @@ export function BirthdaySection() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const [showAllPhotos, setShowAllPhotos] = useState(false)
   const [zoomedImage, setZoomedImage] = useState<string | null>(null)
+  const [carouselImages, setCarouselImages] = useState<string[]>([
+    '/portfolio-1.png',
+    '/portfolio-2.png',
+    '/portfolio-3.png',
+  ])
 
   // Lock body scroll when modals are open
   useEffect(() => {
@@ -25,20 +31,20 @@ export function BirthdaySection() {
     }
   }, [showAllPhotos, zoomedImage])
 
-  // ============================================================================
-  // 📸 HOW TO CHANGE CAROUSEL PHOTOS:
-  // 1. Add your new image files to the `public` folder in your project
-  // 2. Replace the paths below with your new filenames (e.g., '/my-photo.jpg')
-  // Note: You can add as many photos as you want by adding more strings to this list!
-  // ============================================================================
-  const carouselImages = [
-    '/portfolio-1.png',
-    '/portfolio-2.png',
-    '/portfolio-3.png',
-    '/portfolio-4.png',
-  ]
-
   useEffect(() => {
+    // Pick 12 random images for the carousel from photos.json
+    const allPhotos: string[] = []
+    Object.values(dynamicPhotos).forEach((monthArray: any[]) => {
+      monthArray.forEach(photo => allPhotos.push(photo.src))
+    })
+
+    const shuffled = [...allPhotos].sort(() => 0.5 - Math.random())
+    const selected = shuffled.slice(0, 12)
+    
+    if (selected.length > 0) {
+      setCarouselImages(selected)
+    }
+
     const verified = localStorage.getItem('verified_birthday') === 'true'
     setIsVerified(verified)
     if (!verified) {
@@ -68,8 +74,6 @@ export function BirthdaySection() {
   const prevImage = () => {
     setCurrentImageIndex((prev) => (prev - 1 + carouselImages.length) % carouselImages.length)
   }
-
-  // Removed variants to prevent framer-motion mounting bugs
 
   return (
     <section id="birthday" className="relative py-32 px-6 bg-gradient-to-b from-card to-background overflow-hidden">
@@ -115,7 +119,7 @@ export function BirthdaySection() {
 
             {/* Image Carousel */}
             <div className="mb-12">
-              <div className="relative group rounded-2xl overflow-hidden mb-6 h-80 md:h-96">
+              <div className="relative group rounded-2xl overflow-hidden mb-6 h-80 md:h-[32rem]">
                 <motion.div
                   key={currentImageIndex}
                   initial={{ opacity: 0 }}
@@ -129,6 +133,7 @@ export function BirthdaySection() {
                     alt={`Birthday memory ${currentImageIndex + 1}`}
                     fill
                     className="object-cover"
+                    priority
                   />
                 </motion.div>
 
@@ -149,7 +154,7 @@ export function BirthdaySection() {
                 </button>
 
                 {/* Indicators */}
-                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 flex-wrap justify-center max-w-[80%]">
                   {carouselImages.map((_, index) => (
                     <button
                       key={index}
@@ -235,15 +240,15 @@ export function BirthdaySection() {
                   </button>
                 </div>
                 <div className="p-6 md:p-8 overflow-y-auto">
-                  {['January', 'February', 'March', 'April', 'May', 'June'].map(month => (
+                  {Object.entries(dynamicPhotos).map(([month, photos]) => (
                     <div key={month} className="mb-12 last:mb-0">
                       <div className="flex items-center gap-4 mb-6">
                         <h3 className="text-2xl font-bold text-primary">{month}</h3>
                         <div className="h-px bg-border flex-1" />
                       </div>
                       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-                        {Array.from({ length: 12 }).map((_, i) => {
-                          const imageSrc = `/${month.toLowerCase()}/${i + 1}.png`
+                        {(photos as any[]).map((photo, i) => {
+                          const imageSrc = photo.src
                           return (
                             <div 
                               key={i} 
