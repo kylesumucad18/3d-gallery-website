@@ -11,7 +11,7 @@ export function Footer() {
           <p className="text-primary font-semibold uppercase tracking-widest text-sm mb-2">Special Day</p>
           <h3 className="text-3xl font-bold text-foreground mb-2">Celebrating You</h3>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Thank you for bringing so much joy, creativity, and light into the world.<br></br> Happy Birthday, Baby ^^ ! 🎉
+            Thank you for bringing so much joy, creativity, and light into the world.<br></br> Happy 23rd Birthday, Baby ^^ ! 🎉
           </p>
         </div>
 

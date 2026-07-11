@@ -39,7 +39,7 @@ export function BirthdaySection() {
     })
 
     const shuffled = [...allPhotos].sort(() => 0.5 - Math.random())
-    const selected = shuffled.slice(0, 12)
+    const selected = shuffled.slice(0, 23)
     
     if (selected.length > 0) {
       setCarouselImages(selected)
@@ -109,7 +109,7 @@ export function BirthdaySection() {
             </div>
 
             <h2 className="text-5xl md:text-7xl font-bold text-foreground mb-8 leading-tight">
-              Happy <span className="text-primary">Birthday</span>
+              Happy 23rd <span className="text-primary">Birthday</span>
             </h2>
 
             <p className="text-xl md:text-2xl text-muted-foreground mb-12 max-w-2xl mx-auto leading-relaxed text-balance">

@@ -48,11 +48,13 @@ function PreviewCanvas({ layout, photos, customColor, count, patternSrc, presetS
       <div className="absolute inset-0" style={{ backgroundColor: customColor }} />
       {patternSrc && (
         <div 
-          className="absolute inset-0 opacity-30" 
+          className="absolute inset-0 z-0 pointer-events-none" 
           style={{ 
             backgroundImage: `url(${patternSrc})`, 
-            backgroundSize: '100px 100px', 
-            backgroundRepeat: 'repeat' 
+            backgroundSize: 'cover', 
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            opacity: 0.7
           }} 
         />
       )}
@@ -396,21 +398,22 @@ export function PhotoboothLayout({ layout, theme }: PhotoboothLayoutProps) {
         const clipartImg = new Image()
         clipartImg.crossOrigin = 'anonymous'
         clipartImg.onload = () => {
-          ctx.globalAlpha = 0.3
-          
-          // Pattern overlay: tile across the entire canvas as a background
-          const patternCanvas = document.createElement('canvas')
-          patternCanvas.width = 300
-          patternCanvas.height = 300
-          const pCtx = patternCanvas.getContext('2d')
-          if (pCtx) {
-            pCtx.drawImage(clipartImg, 0, 0, 300, 300)
-            const pattern = ctx.createPattern(patternCanvas, 'repeat')
-            if (pattern) {
-              ctx.fillStyle = pattern
-              ctx.fillRect(0, 0, canvas.width, canvas.height)
-            }
+          ctx.globalAlpha = 0.7
+          // Overlay as a single image covering the whole canvas without squishing (object-fit: cover)
+          const canvasRatio = canvas.width / canvas.height
+          const imgRatio = clipartImg.width / clipartImg.height
+          let sWidth = clipartImg.width
+          let sHeight = clipartImg.height
+          let sX = 0
+          let sY = 0
+          if (imgRatio > canvasRatio) {
+            sWidth = clipartImg.height * canvasRatio
+            sX = (clipartImg.width - sWidth) / 2
+          } else {
+            sHeight = clipartImg.width / canvasRatio
+            sY = (clipartImg.height - sHeight) / 2
           }
+          ctx.drawImage(clipartImg, sX, sY, sWidth, sHeight, 0, 0, canvas.width, canvas.height)
 
           loadedCount++
           if (loadedCount === totalDoodlesToLoad) {

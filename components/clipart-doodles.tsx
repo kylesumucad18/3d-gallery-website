@@ -12,13 +12,14 @@ interface ClipArtDoodle {
 
 // Pattern-based doodles that serve as decorative clipart overlays
 const CLIPART_DOODLES: ClipArtDoodle[] = [
-  { id: 'stars', name: 'Stars', src: 'https://api.dicebear.com/7.x/shapes/svg?seed=stars' },
-  { id: 'hearts', name: 'Hearts', src: 'https://api.dicebear.com/7.x/shapes/svg?seed=hearts' },
-  { id: 'circles', name: 'Circles', src: 'https://api.dicebear.com/7.x/shapes/svg?seed=circles' },
-  { id: 'flowers', name: 'Flowers', src: 'https://api.dicebear.com/7.x/shapes/svg?seed=flowers' },
-  { id: 'geometric', name: 'Geometric', src: 'https://api.dicebear.com/7.x/shapes/svg?seed=geometric' },
-  { id: 'confetti', name: 'Confetti', src: 'https://api.dicebear.com/7.x/shapes/svg?seed=confetti' },
-  { id: 'swirls', name: 'Swirls', src: 'https://api.dicebear.com/7.x/shapes/svg?seed=swirls' },
+  { id: 'hearts', name: 'Hearts', src: "/doodles/hearts.png" },
+  { id: 'swirls', name: 'Swirls', src: "/doodles/swirls.png" },
+  { id: 'stars', name: 'Stars', src: "/doodles/stars.png" },
+  { id: 'confetti', name: 'Confetti', src: "/doodles/confetti.png" },
+  { id: 'geometric', name: 'Geometric', src: "/doodles/geometric.png" },
+  { id: 'flowers', name: 'Flowers', src: "/doodles/flowers.png" },
+  { id: 'circles', name: 'Circles', src: "/doodles/circles.png" },
+  { id: 'music', name: 'Music', src: "/doodles/music.png" },
 ]
 
 interface ClipArtDoodlesProps {

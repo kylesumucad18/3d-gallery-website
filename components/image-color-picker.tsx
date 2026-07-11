@@ -102,7 +102,9 @@ export function ImageColorPicker({ color, onChange }: ImageColorPickerProps) {
     if (saturation > 100) saturation = 100
 
     const currentHsl = hexToHsl(color)
-    const nextHsl = { ...currentHsl, h: hue, s: saturation }
+    let nextL = currentHsl.l
+    if (nextL < 5 || nextL > 95) nextL = 50
+    const nextHsl = { ...currentHsl, h: hue, s: saturation, l: nextL }
     setHsl(nextHsl)
     onChange(hslToHex(nextHsl.h, nextHsl.s, nextHsl.l))
   }, [isDragging, color, onChange])

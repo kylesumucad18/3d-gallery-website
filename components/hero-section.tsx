@@ -49,7 +49,7 @@ export function HeroSection() {
           variants={itemVariants}
           className="text-5xl md:text-7xl lg:text-8xl font-bold text-foreground mb-4 leading-tight text-balance"
         >
-          Happy Birthday,{' '}
+          Happy 23rd Birthday,{' '}
           <span className="text-primary">Rica Marie</span>
         </motion.h1>
 
