@@ -62,7 +62,7 @@ export function FavoritesSection() {
       folderId: 3,
       title: 'Meeting my Fam and CK Opening Day!',
       image: '/favmoments/fave3.jpg',
-      description: 'first time meeting your family with a 3 hour sleep, thanks baby :)) ',
+      description: 'first time meeting my family with a 3 hour sleep, thanks baby :)) ',
       buttonText: 'P! Someday',
       audioFile: 'Someday.mp3',
     },
@@ -140,8 +140,8 @@ export function FavoritesSection() {
                     <button
                       onClick={() => toggleMusic(favorite.id, favorite.audioFile)}
                       className={`flex items-center gap-2 px-4 py-2 rounded-lg font-semibold transition-all ${playingId === favorite.id
-                          ? 'bg-red-500 text-white'
-                          : 'bg-primary text-primary-foreground hover:bg-primary/90'
+                        ? 'bg-red-500 text-white'
+                        : 'bg-primary text-primary-foreground hover:bg-primary/90'
                         }`}
                     >
                       <Music size={16} />
@@ -255,8 +255,8 @@ export function FavoritesSection() {
                             key={idx}
                             onClick={() => setSelectedPhotoIndex(idx)}
                             className={`relative w-full aspect-square rounded-lg overflow-hidden border-2 transition-all ${selectedPhotoIndex === idx
-                                ? 'border-primary shadow-md shadow-primary/40 scale-105'
-                                : 'border-border hover:border-primary/50'
+                              ? 'border-primary shadow-md shadow-primary/40 scale-105'
+                              : 'border-border hover:border-primary/50'
                               }`}
                           >
                             <Image src={src} alt={`Thumbnail ${idx + 1}`} fill className="object-cover" unoptimized />
@@ -268,8 +268,8 @@ export function FavoritesSection() {
                         <button
                           onClick={() => toggleMusic(favorite.id, favorite.audioFile)}
                           className={`flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all ${playingId === favorite.id
-                              ? 'bg-red-500 text-white shadow-lg shadow-red-500/20'
-                              : 'bg-primary text-primary-foreground hover:bg-primary/90'
+                            ? 'bg-red-500 text-white shadow-lg shadow-red-500/20'
+                            : 'bg-primary text-primary-foreground hover:bg-primary/90'
                             }`}
                         >
                           <Music size={18} />
