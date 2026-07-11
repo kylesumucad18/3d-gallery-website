@@ -82,7 +82,6 @@ export function VerificationModal({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
-          onClick={onClose}
         >
           <motion.div
             initial={{ scale: 0.95, opacity: 0 }}
@@ -93,12 +92,6 @@ export function VerificationModal({
           >
             <div className="flex justify-between items-start mb-6">
               <h2 className="text-2xl font-bold text-foreground">Verification</h2>
-              <button
-                onClick={onClose}
-                className="text-muted-foreground hover:text-foreground transition-colors"
-              >
-                <X size={24} />
-              </button>
             </div>
 
             <p className="text-muted-foreground mb-6 leading-relaxed">{question}</p>
