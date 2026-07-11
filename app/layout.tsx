@@ -12,8 +12,8 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'Rica Marie Huyo-a Caayon | Professional Photography Portfolio',
-  description: 'Celebrating the exceptional photography work of Rica Marie Huyo-a Caayon. A diverse portfolio of stunning moments captured through an artistic lens.',
+  title: 'Happy 23rd Birthday Rica Marie Huyo-a Caayon!',
+  description: 'A special gallery filled with love, laughter, and unforgettable memories. Wishing you the happiest of birthdays! 🎉',
   generator: 'v0.app',
   icons: {
     icon: [
