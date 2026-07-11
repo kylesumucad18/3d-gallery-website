@@ -11,12 +11,12 @@ interface PresetDoodle {
 }
 
 const PRESET_DOODLES: PresetDoodle[] = [
-  { id: 'rabbit', name: 'Rabbit', src: '/doodles/rabbit.png' },
-  { id: 'peacock', name: 'Peacock', src: '/doodles/peacock.png' },
-  { id: 'lion', name: 'Lion', src: '/doodles/lion.png' },
-  { id: 'eagle', name: 'Eagle', src: '/doodles/eagle.png' },
-  { id: 'giraffe', name: 'Giraffe', src: '/doodles/giraffe.png' },
-  { id: 'dinosaur', name: 'Dinosaur', src: '/doodles/dinosaur.png' },
+  { id: 'rabbit', name: 'Rabbit', src: 'https://api.dicebear.com/7.x/fun-emoji/svg?seed=rabbit' },
+  { id: 'peacock', name: 'Peacock', src: 'https://api.dicebear.com/7.x/fun-emoji/svg?seed=peacock' },
+  { id: 'lion', name: 'Lion', src: 'https://api.dicebear.com/7.x/fun-emoji/svg?seed=lion' },
+  { id: 'eagle', name: 'Eagle', src: 'https://api.dicebear.com/7.x/fun-emoji/svg?seed=eagle' },
+  { id: 'giraffe', name: 'Giraffe', src: 'https://api.dicebear.com/7.x/fun-emoji/svg?seed=giraffe' },
+  { id: 'dinosaur', name: 'Dinosaur', src: 'https://api.dicebear.com/7.x/fun-emoji/svg?seed=dinosaur' },
 ]
 
 interface PresetDoodlesProps {
@@ -40,13 +40,8 @@ export function PresetDoodles({ onSelectDoodles, selectedSrcs }: PresetDoodlesPr
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center gap-2 mb-4">
-        <Zap size={18} className="text-primary" />
-        <div>
-          <h4 className="text-sm font-bold text-foreground">Animal Doodles</h4>
-          {/* User can select UP TO 3 animal doodles to apply as background decorations */}
-          <p className="text-xs text-muted-foreground">Select up to 3 animals for side backgrounds ({selectedSrcs.length}/3)</p>
-        </div>
+      <div className="mb-4">
+        <p className="text-xs text-muted-foreground">Select up to 3 animals for side backgrounds ({selectedSrcs.length}/3)</p>
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
@@ -59,7 +54,7 @@ export function PresetDoodles({ onSelectDoodles, selectedSrcs }: PresetDoodlesPr
             disabled={!isSelected && selectedSrcs.length >= 3}
             className={`relative group p-3 rounded-xl border-2 transition-all duration-200 overflow-hidden aspect-square flex items-center justify-center ${
               isSelected
-                ? 'border-primary bg-primary/10 shadow-lg shadow-primary/20 scale-105'
+                ? 'border-primary bg-primary/10 shadow-[0_0_15px_rgba(217,160,91,0.3)] scale-105'
                 : 'border-border/60 hover:border-primary/50 bg-card/40 hover:bg-card/70 hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed'
             }`}
             title={doodle.name}
@@ -81,8 +76,8 @@ export function PresetDoodles({ onSelectDoodles, selectedSrcs }: PresetDoodlesPr
             </div>
             {/* Show checkmark badge for each selected animal */}
             {isSelected && (
-              <div className="absolute top-2 right-2 w-5 h-5 bg-primary rounded-full flex items-center justify-center shadow-lg">
-                <Sparkles size={12} className="text-white" />
+              <div className="absolute top-2 right-2 w-6 h-6 bg-primary rounded-full flex items-center justify-center shadow-lg border-2 border-background">
+                <span className="text-xs font-bold text-white">✓</span>
               </div>
             )}
           </button>

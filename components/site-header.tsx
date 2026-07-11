@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X } from 'lucide-react'
 import { ThemeSwitcher } from './theme-switcher'
@@ -18,6 +19,9 @@ const links = [
 export function SiteHeader() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const pathname = usePathname()
+
+  const validMonths = ['/january', '/february', '/march', '/april', '/may', '/june']
 
   useEffect(() => {
     const handleScroll = () => {
@@ -26,6 +30,10 @@ export function SiteHeader() {
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
+
+  if (validMonths.includes(pathname.toLowerCase())) {
+    return null
+  }
 
   return (
     <header

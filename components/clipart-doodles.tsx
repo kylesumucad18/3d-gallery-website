@@ -12,13 +12,13 @@ interface ClipArtDoodle {
 
 // Pattern-based doodles that serve as decorative clipart overlays
 const CLIPART_DOODLES: ClipArtDoodle[] = [
-  { id: 'stars', name: 'Stars', src: '/doodles/stars.png' },
-  { id: 'hearts', name: 'Hearts', src: '/doodles/hearts.png' },
-  { id: 'circles', name: 'Circles', src: '/doodles/circles.png' },
-  { id: 'flowers', name: 'Flowers', src: '/doodles/flowers.png' },
-  { id: 'geometric', name: 'Geometric', src: '/doodles/geometric.png' },
-  { id: 'confetti', name: 'Confetti', src: '/doodles/confetti.png' },
-  { id: 'swirls', name: 'Swirls', src: '/doodles/swirls.png' },
+  { id: 'stars', name: 'Stars', src: 'https://api.dicebear.com/7.x/shapes/svg?seed=stars' },
+  { id: 'hearts', name: 'Hearts', src: 'https://api.dicebear.com/7.x/shapes/svg?seed=hearts' },
+  { id: 'circles', name: 'Circles', src: 'https://api.dicebear.com/7.x/shapes/svg?seed=circles' },
+  { id: 'flowers', name: 'Flowers', src: 'https://api.dicebear.com/7.x/shapes/svg?seed=flowers' },
+  { id: 'geometric', name: 'Geometric', src: 'https://api.dicebear.com/7.x/shapes/svg?seed=geometric' },
+  { id: 'confetti', name: 'Confetti', src: 'https://api.dicebear.com/7.x/shapes/svg?seed=confetti' },
+  { id: 'swirls', name: 'Swirls', src: 'https://api.dicebear.com/7.x/shapes/svg?seed=swirls' },
 ]
 
 interface ClipArtDoodlesProps {
@@ -38,13 +38,9 @@ export function ClipArtDoodles({ onSelectClipArt, selectedSrc }: ClipArtDoodlesP
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center gap-2 mb-4">
-        <Palette size={18} className="text-primary" />
-        <div>
-          <h4 className="text-sm font-bold text-foreground">Pattern ClipArt</h4>
-          {/* User can select ONE pattern-based doodle for additional decorative overlay */}
-          <p className="text-xs text-muted-foreground">Select 1 pattern style for decorative overlay</p>
-        </div>
+      <div className="mb-4">
+        {/* User can select ONE pattern-based doodle for additional decorative overlay */}
+        <p className="text-xs text-muted-foreground">Select 1 pattern style for decorative overlay</p>
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -56,7 +52,7 @@ export function ClipArtDoodles({ onSelectClipArt, selectedSrc }: ClipArtDoodlesP
             onClick={() => handleSelectClipArt(clipart.src)}
             className={`relative group p-3 rounded-xl border-2 transition-all duration-200 overflow-hidden aspect-square flex items-center justify-center ${
               isSelected
-                ? 'border-primary bg-primary/10 shadow-lg shadow-primary/20 scale-105'
+                ? 'border-primary bg-primary/10 shadow-[0_0_15px_rgba(217,160,91,0.3)] scale-105'
                 : 'border-border/60 hover:border-primary/50 bg-card/40 hover:bg-card/70 hover:shadow-md'
             }`}
             title={clipart.name}
@@ -78,7 +74,7 @@ export function ClipArtDoodles({ onSelectClipArt, selectedSrc }: ClipArtDoodlesP
             </div>
             {/* Show checkmark badge when selected */}
             {isSelected && (
-              <div className="absolute top-2 right-2 w-5 h-5 bg-primary rounded-full flex items-center justify-center shadow-lg">
+              <div className="absolute top-2 right-2 w-6 h-6 bg-primary rounded-full flex items-center justify-center shadow-lg border-2 border-background">
                 <span className="text-xs font-bold text-white">✓</span>
               </div>
             )}

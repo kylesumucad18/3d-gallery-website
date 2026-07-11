@@ -116,7 +116,7 @@ export function LetterSection() {
               </button>
               <button
                 onClick={() => window.open('https://www.messenger.com/', '_blank')}
-                className="flex items-center gap-2 px-8 py-4 bg-blue-600 text-white font-bold rounded-full hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/20 w-full sm:w-auto justify-center"
+                className="flex items-center gap-2 px-8 py-4 bg-primary text-primary-foreground font-bold rounded-full hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 w-full sm:w-auto justify-center"
               >
                 <MessageCircle size={20} />
                 Reply in Messenger
@@ -210,7 +210,7 @@ export function LetterSection() {
                     className="py-8 text-center"
                   >
                     <div className="flex justify-center mb-6">
-                      <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-blue-500/10 text-blue-500 relative">
+                      <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-primary/10 text-primary relative">
                         <MessageCircle size={48} />
                         <motion.div
                           className="absolute -top-1 -right-1 w-6 h-6 bg-red-500 rounded-full border-2 border-card"
@@ -226,7 +226,7 @@ export function LetterSection() {
                     </p>
                     <button
                       onClick={handleMessengerClick}
-                      className="w-full px-6 py-4 bg-blue-600 text-white font-bold text-lg rounded-xl hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/25 flex items-center justify-center gap-3"
+                      className="w-full px-6 py-4 bg-primary text-primary-foreground font-bold text-lg rounded-xl hover:bg-primary/90 transition-all shadow-lg shadow-primary/25 flex items-center justify-center gap-3"
                     >
                       <MessageCircle size={24} />
                       Open Messenger

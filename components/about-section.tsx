@@ -30,34 +30,24 @@ export function AboutSection() {
   // ============================================================================
   const features = [
     {
-      icon: Heart,
+      letter: 'R',
+      title: 'Radiant',
+      description: 'A warmth that lights up every room she enters.',
+    },
+    {
+      letter: 'I',
+      title: 'Insightful',
+      description: 'Always seeing the best in others, gently and clearly.',
+    },
+    {
+      letter: 'C',
       title: 'Compassionate',
       description: 'A heart that touches everyone with genuine kindness.',
     },
     {
-      icon: Eye,
-      title: 'Deeply Perceptive',
-      description: 'Always seeing the best in others with such clear, gentle insight.',
-    },
-    {
-      icon: Zap,
-      title: 'Unwaveringly Determined',
-      description: 'Tackling every dream with an unstoppable spirit and focus.',
-    },
-    {
-      icon: Target,
-      title: 'Diligently Committed',
-      description: 'Putting heart and soul into everything you choose to do.',
-    },
-    {
-      icon: Lightbulb,
-      title: 'Creatively Adaptable',
-      description: 'Turning every challenge into an opportunity with brilliant, new ideas.',
-    },
-    {
-      icon: Sparkles,
-      title: 'Attentively Caring',
-      description: 'Noticing the little things that make everyone feel loved and valued.',
+      letter: 'A',
+      title: 'Affectionate',
+      description: 'Loving without hesitation, in the smallest gestures and the biggest.',
     },
   ]
 
@@ -102,19 +92,18 @@ export function AboutSection() {
               Here are the beautiful qualities that make Rica truly special.
             </motion.p>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
               {features.map((feature, index) => {
-                const Icon = feature.icon
                 return (
                   <motion.div
                     key={index}
-                    initial={{ opacity: 0, y: 20 }}
+                    initial={{ opacity: 0, y: 40 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: index * 0.15 }}
                     className="group p-8 rounded-xl bg-card border border-border hover:border-primary/50 transition-all duration-300 hover:shadow-2xl hover:shadow-primary/10"
                   >
-                    <div className="mb-6 inline-block p-4 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors">
-                      <Icon className="text-primary" size={28} />
+                    <div className="mb-6 inline-flex items-center justify-center w-14 h-14 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors">
+                      <span className="text-2xl font-bold text-primary">{feature.letter}</span>
                     </div>
                     <h3 className="text-xl font-bold text-foreground mb-3">{feature.title}</h3>
                     <p className="text-muted-foreground leading-relaxed">{feature.description}</p>
